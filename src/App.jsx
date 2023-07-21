@@ -13,8 +13,8 @@ function App() {
             <Nav />
             <TrackList />
             <SideBar />
+            <AudioPlayer />
           </main>
-          <AudioPlayer />
           <footer className="footer"></footer>
         </div>
       </div>

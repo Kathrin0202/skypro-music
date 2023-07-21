@@ -1,5 +1,4 @@
 import { songs } from "./songs";
-
 export const Track = () => {
   return songs.map((song, index) => {
     return (

@@ -1,5 +1,17 @@
 import { Track } from "./Track";
+import { useEffect, useState } from "react";
+import { SceletonCard } from "./sceleton";
 export function TrackList() {
+  const [isLoading, setLoading] = useState([]);
+  const [songs, setPosts] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+    const time = setTimeout(() => {
+      setPosts(songs);
+      setLoading(false);
+    }, 5000);
+    return () => clearTimeout(time);
+  }, []);
   return (
     <div className="main__centerblock centerblock">
       <div className="centerblock__search search">
@@ -34,7 +46,8 @@ export function TrackList() {
           </div>
         </div>
         <div className="content__playlist playlist">
-          <Track />
+          {isLoading && <SceletonCard />}
+          {!isLoading && <Track />}
         </div>
       </div>
     </div>
