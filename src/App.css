@@ -217,6 +217,7 @@ body {
   -ms-flex-align: center;
   align-items: center;
   margin-bottom: 51px;
+  gap: 10px;
 }
 
 .centerblock__content {
@@ -227,6 +228,7 @@ body {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
+  position: relative;
 }
 
 .search__svg {
@@ -303,10 +305,8 @@ body {
   border: 1px solid #ffffff;
   border-radius: 60px;
   padding: 6px 20px;
-}
-
-.filter__button:not(:last-child) {
-  margin-right: 10px;
+  background-color: #181818;
+  color: white;
 }
 
 .content__title {
@@ -874,4 +874,80 @@ body {
 
 .volume__progress-line {
   width: 109px;
+}
+.filter-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 24px;
+  border-radius: 12px;
+  background: #313131;
+  position: absolute;
+  z-index: 1;
+  padding-left: 34px;
+  padding-right: 34px;
+}
+.text-wrap {
+  list-style-type: none;
+  color: #fff;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+.text-wrap:hover {
+  color: #b672ff;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-family: "StratosSkyeng";
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 120% */
+  text-decoration-line: underline;
+}
+
+.filter-radio {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 28px;
+  padding: 34px;
+  position: absolute;
+  z-index: 1;
+  border-radius: 12px;
+  background: #313131;
+  color: #fff;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px; /* 120% */
+}
+.label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 25px;
+  user-select: none;
+}
+.label:before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  background: rgb(49, 49, 49);
+  border: 1px solid rgba(255, 255, 255, 1);
+  border-radius: 20px;
+}
+.filter-radio input[type="radio"] {
+  display: none;
+}
+
+.filter-radio input[type="radio"]:checked + label:before {
+  background: rgba(255, 255, 255, 1);
 }
