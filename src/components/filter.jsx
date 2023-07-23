@@ -1,6 +1,11 @@
 import { useState } from "react";
 
 export function Filter() {
+  const toggleFilter = (filter) => {
+    setOpenFilter(openFilter === filter ? "" : filter);
+  };
+  const [openFilter, setOpenFilter] = useState("");
+
   const typeMusicOnAuthor = [
     "Michael Jackson",
     "Frank Sinatra",
@@ -10,31 +15,22 @@ export function Filter() {
   ];
   const typeMusicOnGenre = ["Рок", "Хип-Хоп", "Поп-Музыка", "Техно", "Инди"];
   const typeMusicOnYear = ["более новые", "более старые"];
-  const toggleFilter = (filter) => {
-    setOpenFilter(openFilter === filter ? "" : filter);
-  };
-  const [openFilter, setOpenFilter] = useState("");
-  const onAuthor = typeMusicOnAuthor.map((text, index) => {
+
+  const author = typeMusicOnAuthor.map((text, index) => {
     return (
       <li className="text-wrap" key={index}>
         {text}
       </li>
     );
   });
-  const onGenre = typeMusicOnGenre.map((text, index) => {
+  const genre = typeMusicOnGenre.map((text, index) => {
     return (
       <li className="text-wrap" key={index}>
         {text}
       </li>
     );
   });
-  const onYear = typeMusicOnYear.map((text, index) => {
-    return (
-      <li className="text-wrap" key={index}>
-        {text}
-      </li>
-    );
-  });
+  
   return (
     <div className="centerblock__filter filter">
       <div className="filter__title">Искать по:</div>
@@ -49,7 +45,7 @@ export function Filter() {
         >
           исполнителю
         </ul>
-        <div className="filter-wrap">{openFilter === "author" && onAuthor}</div>
+        <div className="filter-wrap">{openFilter === "author" && author}</div>
       </div>
       <div>
         <ul
@@ -90,7 +86,7 @@ export function Filter() {
         >
           жанру
         </ul>
-        <div className="filter-wrap">{openFilter === "genre" && onGenre}</div>
+        <div className="filter-wrap">{openFilter === "genre" && genre}</div>
       </div>
     </div>
   );

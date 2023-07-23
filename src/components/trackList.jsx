@@ -40,8 +40,7 @@ export function TrackList() {
           </div>
         </div>
         <div className="content__playlist playlist">
-          {isLoading && <SceletonCard />}
-          {!isLoading && <Track />}
+          {isLoading ? <SceletonCard /> : <Track />}
         </div>
       </div>
     </div>
