@@ -1,23 +1,24 @@
-import "./App.css";
-import { AudioPlayer } from "./components/audioPlayer";
-import { Nav } from "./components/navMenu";
-import { SideBar } from "./components/sideBar";
-import { TrackList } from "./components/trackList";
+import { AudioPlayer } from "./components/AudioPlayer/audioPlayer";
+import { Nav } from "./components/NavMenu/navMenu";
+import { SideBar } from "./components/SideBar/sideBar";
+import { TrackList } from "./components/TrackList/trackList";
+import * as S from "./App.style";
 
 function App() {
   return (
     <body>
-      <div className="wrapper">
-        <div className="container">
-          <main className="main">
+      <S.GlobalStyle />
+      <S.Wrapper>
+        <S.Container>
+          <S.Main>
             <Nav />
             <TrackList />
             <SideBar />
             <AudioPlayer />
-          </main>
-          <footer className="footer"></footer>
-        </div>
-      </div>
+          </S.Main>
+          <footer></footer>
+        </S.Container>
+      </S.Wrapper>
     </body>
   );
 }

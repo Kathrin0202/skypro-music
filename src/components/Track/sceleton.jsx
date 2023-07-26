@@ -1,24 +1,24 @@
 import Skeleton from "react-loading-skeleton";
-import { playlist } from "./playlist";
+import { playlist } from "../playlist";
+import * as S from "./sceleton.style";
+
 export const SceletonCard = () => {
   return (
-    <div className="playlist__item">
+    <S.PlaylistItem>
       {Array(10)
         .fill()
         .map((item, index) => (
-          <div key={index} className="playlist__track track">
-            <div className="track__title">
-              <div
-                className="track__title-image"
+          <S.PlaylistTrack key={index}>
+            <S.TrackTitle>
+              <S.TrackTitleImage
                 style={{
                   width: "51px",
                   height: "51px",
                   backgroundColor: "rgba(49, 49, 49, 1)",
                 }}
-              ></div>
+              ></S.TrackTitleImage>
               <Skeleton />
-              <div
-                className="track__title-text"
+              <S.TrackAuthor
                 style={{
                   width: "356px",
                   height: "19px",
@@ -26,10 +26,9 @@ export const SceletonCard = () => {
                 }}
               >
                 <Skeleton />
-              </div>
-            </div>
-            <div
-              className="track__author"
+              </S.TrackAuthor>
+            </S.TrackTitle>
+            <S.TrackAuthor
               style={{
                 width: "301px",
                 height: "19px",
@@ -37,9 +36,8 @@ export const SceletonCard = () => {
               }}
             >
               <Skeleton />
-            </div>
-            <div
-              className="track__album"
+            </S.TrackAuthor>
+            <S.TrackAlbum
               style={{
                 width: "325px",
                 height: "19px",
@@ -47,19 +45,18 @@ export const SceletonCard = () => {
               }}
             >
               <Skeleton />
-            </div>
-          </div>
+            </S.TrackAlbum>
+          </S.PlaylistTrack>
         ))}
-    </div>
+    </S.PlaylistItem>
   );
 };
 
 export const SkeletonItem = () => {
   return playlist.map((play, index) => {
     return (
-      <div
+      <S.SideBarItem
         key={index}
-        className="sidebar__item"
         style={{
           width: "250px",
           height: "150px",
@@ -67,7 +64,7 @@ export const SkeletonItem = () => {
         }}
       >
         <Skeleton />
-      </div>
+      </S.SideBarItem>
     );
   });
 };

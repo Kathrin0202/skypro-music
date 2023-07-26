@@ -1,6 +1,8 @@
-import { BarItem } from "./barItem";
+import { BarItem } from "../BarItem/barItem";
 import { useEffect, useState } from "react";
-import { SkeletonItem } from "./sceleton";
+import { SkeletonItem } from "../Track/sceleton";
+import * as S from "./sideBar.style";
+
 export function SideBar() {
   const [isLoading, setLoading] = useState([]);
   const [songs, setPosts] = useState(false);
@@ -13,17 +15,17 @@ export function SideBar() {
     return () => clearTimeout(time);
   }, []);
   return (
-    <div className="main__sidebar sidebar">
-      <div className="sidebar__personal">
-        <p className="sidebar__personal-name">Sergey.Ivanov</p>
-        <div className="sidebar__avatar"></div>
-      </div>
-      <div className="sidebar__block">
-        <div className="sidebar__list">
+    <S.MainSideBar>
+      <S.SideBarPersonal>
+        <S.SideBarPersonalName>Sergey.Ivanov</S.SideBarPersonalName>
+        <S.SideBarAvatar></S.SideBarAvatar>
+      </S.SideBarPersonal>
+      <S.SideBarBlock>
+        <S.SideBarList>
           {isLoading && <SkeletonItem />}
           {!isLoading && <BarItem />}
-        </div>
-      </div>
-    </div>
+        </S.SideBarList>
+      </S.SideBarBlock>
+    </S.MainSideBar>
   );
 }
