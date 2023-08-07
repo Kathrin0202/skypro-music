@@ -1,21 +1,23 @@
-import { AudioPlayer } from "./components/AudioPlayer/audioPlayer";
-import { Nav } from "./components/NavMenu/navMenu";
-import { SideBar } from "./components/SideBar/sideBar";
-import { TrackList } from "./components/TrackList/trackList";
-import * as S from "./App.style";
+import { useState } from "react";
+import * as S from "./components/Main/App.style";
+import { Login } from "./pages/login";
+import { AppRoutes } from "./routes";
 
 function App() {
+  const [user, setUser] = useState(null);
+  const handleLogin = () => setUser({ login: "token" });
+  const handleLogOut = () => setUser(null);
+
   return (
     <body>
       <S.GlobalStyle />
       <S.Wrapper>
         <S.Container>
-          <S.Main>
-            <Nav />
-            <TrackList />
-            <SideBar />
-            <AudioPlayer />
-          </S.Main>
+          <Login
+            user={user}
+            onAuthButtonClick={user ? handleLogOut : handleLogin}
+          />
+          <AppRoutes user={user} />
           <footer></footer>
         </S.Container>
       </S.Wrapper>

@@ -1,17 +1,24 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import * as S from "./navMenu.styled";
 const Menu = () => {
   return (
     <S.NavMenu>
       <S.ListMenu>
         <S.MenuItem>
-          <S.MenuLink href="http://">Главное</S.MenuLink>
+          <Link to="/main">
+            <S.MenuLink>Главное</S.MenuLink>
+          </Link>
         </S.MenuItem>
         <S.MenuItem>
-          <S.MenuLink href="http://">Мой плейлист</S.MenuLink>
+          <Link to="/myplaylist">
+            <S.MenuLink>Мой плейлист</S.MenuLink>
+          </Link>
         </S.MenuItem>
         <S.MenuItem>
-          <S.MenuLink href="http://">Войти</S.MenuLink>
+          <Link to="/login">
+            <S.MenuLink>Войти</S.MenuLink>
+          </Link>
         </S.MenuItem>
       </S.ListMenu>
     </S.NavMenu>
