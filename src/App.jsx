@@ -1,23 +1,26 @@
-import "./App.css";
-import { AudioPlayer } from "./components/audioPlayer";
-import { Nav } from "./components/navMenu";
-import { SideBar } from "./components/sideBar";
-import { TrackList } from "./components/trackList";
+import { useState } from "react";
+import * as S from "./components/Main/App.style";
+import { Login } from "./pages/login";
+import { AppRoutes } from "./routes";
 
 function App() {
+  const [user, setUser] = useState(null);
+  const handleLogin = () => setUser({ login: "token" });
+  const handleLogOut = () => setUser(null);
+
   return (
     <body>
-      <div className="wrapper">
-        <div className="container">
-          <main className="main">
-            <Nav />
-            <TrackList />
-            <SideBar />
-            <AudioPlayer />
-          </main>
-          <footer className="footer"></footer>
-        </div>
-      </div>
+      <S.GlobalStyle />
+      <S.Wrapper>
+        <S.Container>
+          <Login
+            user={user}
+            onAuthButtonClick={user ? handleLogOut : handleLogin}
+          />
+          <AppRoutes user={user} />
+          <footer></footer>
+        </S.Container>
+      </S.Wrapper>
     </body>
   );
 }
