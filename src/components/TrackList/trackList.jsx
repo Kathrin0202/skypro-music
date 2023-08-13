@@ -1,20 +1,14 @@
-import { Track } from "../Track/Track";
-import { useEffect, useState } from "react";
+import { TrackPage } from "../Track/Track";
 import { SceletonCard } from "../Track/sceleton";
 import { Filter } from "../Filter/filter";
 import * as S from "./trackList.style";
 
-export function TrackList() {
-  const [isLoading, setLoading] = useState([]);
-  const [songs, setPosts] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    const time = setTimeout(() => {
-      setPosts(songs);
-      setLoading(false);
-    }, 5000);
-    return () => clearTimeout(time);
-  }, []);
+export function TrackList({
+  isLoading,
+  tracks,
+  setCurrentTrack,
+  currentTrack,
+}) {
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
@@ -37,7 +31,15 @@ export function TrackList() {
           </S.PlaylistTitleCol4>
         </S.ContentTitle>
         <S.ContentPlaylist>
-          {isLoading ? <SceletonCard /> : <Track />}
+          {isLoading ? (
+            <SceletonCard />
+          ) : (
+            <TrackPage
+              tracks={tracks}
+              currentTrack={currentTrack}
+              setCurrentTrack={setCurrentTrack}
+            />
+          )}
         </S.ContentPlaylist>
       </S.CenterblockContent>
     </S.MainCenterblock>

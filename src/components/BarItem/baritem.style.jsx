@@ -6,7 +6,7 @@ export const SideBarItem = styled.div`
     margin-bottom: 30px;
   }
 `;
-export const SideBarLink = styled.a`
+export const SideBarLink = styled.div`
   width: 100%;
   height: 100%;
 `;

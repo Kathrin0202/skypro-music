@@ -4,21 +4,27 @@ import { SideBar } from "../SideBar/sideBar";
 import { TrackList } from "../TrackList/trackList";
 import * as S from "./App.style";
 
-export const MainPage = () => {
+export const MainPage = ({
+  isLoading,
+  tracks,
+  setCurrentTrack,
+  currentTrack,
+}) => {
   return (
-    <body>
-      <S.GlobalStyle />
-      <S.Wrapper>
-        <S.Container>
-          <S.Main>
-            <Nav />
-            <TrackList />
-            <SideBar />
-            <AudioPlayer />
-          </S.Main>
-          <footer></footer>
-        </S.Container>
-      </S.Wrapper>
-    </body>
+    <S.Wrapper>
+      <S.Container>
+        <S.Main>
+          <Nav />
+          <TrackList
+            isLoading={isLoading}
+            tracks={tracks}
+            setCurrentTrack={setCurrentTrack}
+          />
+          <SideBar />
+          <AudioPlayer currentTrack={currentTrack} />
+        </S.Main>
+        <footer></footer>
+      </S.Container>
+    </S.Wrapper>
   );
 };
