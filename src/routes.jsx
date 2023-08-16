@@ -15,6 +15,8 @@ export const AppRoutes = ({
   setIsOpen,
   currentTrack,
   setCurrentTrack,
+  trackTime,
+  setTrackTime
 }) => {
   return (
     <Routes>
@@ -31,6 +33,8 @@ export const AppRoutes = ({
               setIsOpen={setIsOpen}
               currentTrack={currentTrack}
               setCurrentTrack={setCurrentTrack}
+              trackTime={trackTime}
+              setTrackTime={setTrackTime}
             />
           }
         />

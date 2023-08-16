@@ -11,6 +11,7 @@ function App() {
   const [isLoading, setLoading] = useState(true);
   const [tracks, setPosts] = useState([]);
   const [currentTrack, setCurrentTrack] = useState(null);
+  const [trackTime, setTrackTime] = useState({});
   useEffect(() => {
     getPlaylist()
       .then((tracks) => {
@@ -38,6 +39,8 @@ function App() {
             tracks={tracks}
             currentTrack={currentTrack}
             setCurrentTrack={setCurrentTrack}
+            trackTime={trackTime}
+            setTrackTime={setTrackTime}
           />
           <footer></footer>
         </S.Container>

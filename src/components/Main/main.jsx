@@ -9,6 +9,8 @@ export const MainPage = ({
   tracks,
   setCurrentTrack,
   currentTrack,
+  trackTime,
+  setTrackTime,
 }) => {
   return (
     <S.Wrapper>
@@ -21,7 +23,11 @@ export const MainPage = ({
             setCurrentTrack={setCurrentTrack}
           />
           <SideBar />
-          <AudioPlayer currentTrack={currentTrack} />
+          <AudioPlayer
+            currentTrack={currentTrack}
+            trackTime={trackTime}
+            setTrackTime={setTrackTime}
+          />
         </S.Main>
         <footer></footer>
       </S.Container>
