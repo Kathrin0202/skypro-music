@@ -16,8 +16,8 @@ const Menu = () => {
           </Link>
         </S.MenuItem>
         <S.MenuItem>
-          <Link to="/login">
-            <S.MenuLink>Войти</S.MenuLink>
+          <Link to="/">
+            <S.MenuLink>Выйти</S.MenuLink>
           </Link>
         </S.MenuItem>
       </S.ListMenu>

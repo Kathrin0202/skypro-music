@@ -1,8 +1,14 @@
+import { useEffect } from "react";
 import { useState } from "react";
 import * as S from "./audioPlayer.style";
-export const Volume = () => {
-  const [volume, setVolume] = useState(0.1);
-  const duration = 1;
+export const Volume = ({ audioRef }) => {
+  const [volume, setVolume] = useState(70);
+  useEffect(() => {
+    if (audioRef) {
+      audioRef.current.volume = volume / 100;
+    }
+  }, [volume, audioRef]);
+
   return (
     <S.BarVolumeBlock>
       <S.VolumeContent>
@@ -14,13 +20,10 @@ export const Volume = () => {
         <S.VolumeProgress>
           <S.VolumeProgressLine
             type="range"
-            min="0"
-            max={duration}
+            min={0}
+            max={100}
             value={volume}
-            volume={volume}
-            step="0.1"
             onChange={(e) => setVolume(e.target.value)}
-            $color="#b672ff"
           />
         </S.VolumeProgress>
       </S.VolumeContent>

@@ -378,6 +378,7 @@ export const VolumeProgress = styled.div`
   margin-top: -8px;
 `;
 export const VolumeProgressLine = styled.input`
+  cursor: pointer;
   -webkit-appearance: none;
   background: linear-gradient(
     to right,

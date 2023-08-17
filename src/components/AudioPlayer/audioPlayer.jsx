@@ -61,20 +61,21 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
         <>
           <S.Bar>
             <S.BarContent>
-              <S.AudioFile
-                style={{ visibility: "hidden" }}
+              <audio
                 controls
+                style={{ visibility: "hidden" }}
                 loop={isRepeat}
                 ref={audioRef}
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
                 onTimeUpdate={handleProgress}
+                volume
               >
                 <source
                   src={currentTrack.track_file}
                   type="audio/mpeg"
                 ></source>
-              </S.AudioFile>
+              </audio>
               <S.BarPlayerProgressTime>
                 {formatTime(audioRef.current?.currentTime || 0)}/
                 {formatTime(audioRef.current?.duration || 0)}
@@ -88,14 +89,25 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
                         <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
                       </S.PlayerBtnPrevSvg>
                     </S.PlayerBtn>
-                    <S.PlayerBtn onClick={handleClick}>
-                      <S.PlayerBtnPlaySvg alt="play">
-                        <use
-                          xlinkHref={`img/icon/sprite.svg#icon-${
-                            isPlaying ? "pause" : "play"
-                          }`}
-                        ></use>
-                      </S.PlayerBtnPlaySvg>
+                    <S.PlayerBtn>
+                      {isPlaying ? (
+                        <S.PlayerBtnPlaySvg alt="pause" onClick={handleClick}>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="15"
+                            height="19"
+                            viewBox="0 0 15 19"
+                            fill="none"
+                          >
+                            <rect width="5" height="19" fill="#D9D9D9" />
+                            <rect x="10" width="5" height="19" fill="#D9D9D9" />
+                          </svg>
+                        </S.PlayerBtnPlaySvg>
+                      ) : (
+                        <S.PlayerBtnPlaySvg alt="play" onClick={handleClick}>
+                          <use xlinkHref="./img/icon/sprite.svg#icon-play"></use>
+                        </S.PlayerBtnPlaySvg>
+                      )}
                     </S.PlayerBtn>
                     <S.PlayerBtnNext onClick={handleNext}>
                       <S.PlayerBtnNextSvg alt="next">
@@ -147,7 +159,7 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
                     </S.TrackPlayLike>
                   </S.PlayerTrackPlay>
                 </S.BarPlayer>
-                <Volume />
+                <Volume audioRef={audioRef} />
               </S.BarPlayerBlock>
             </S.BarContent>
           </S.Bar>

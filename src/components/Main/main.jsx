@@ -13,24 +13,19 @@ export const MainPage = ({
   setTrackTime,
 }) => {
   return (
-    <S.Wrapper>
-      <S.Container>
-        <S.Main>
-          <Nav />
-          <TrackList
-            isLoading={isLoading}
-            tracks={tracks}
-            setCurrentTrack={setCurrentTrack}
-          />
-          <SideBar />
-          <AudioPlayer
-            currentTrack={currentTrack}
-            trackTime={trackTime}
-            setTrackTime={setTrackTime}
-          />
-        </S.Main>
-        <footer></footer>
-      </S.Container>
-    </S.Wrapper>
+    <S.Main>
+      <Nav />
+      <TrackList
+        isLoading={isLoading}
+        tracks={tracks}
+        setCurrentTrack={setCurrentTrack}
+      />
+      <SideBar />
+      <AudioPlayer
+        currentTrack={currentTrack}
+        trackTime={trackTime}
+        setTrackTime={setTrackTime}
+      />
+    </S.Main>
   );
 };
