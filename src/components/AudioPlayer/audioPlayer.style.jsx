@@ -17,10 +17,80 @@ export const BarContent = styled.div`
   flex-direction: column;
 `;
 export const BarPlayerProgress = styled.div`
-  width: 100%;
-  height: 5px;
-  background: #2e2e2e;
+  &:hover {
+    height: 20px;
+    background: #2e2e2e;
+    transition-delay: 0s;
+  }
 `;
+export const BarPlayerPointer = styled.input`
+  --progress-height: 8px;
+  --progress-color: #b672ff;
+  --progress-color: ${(props) => props.$color ?? "#b672ff"};
+
+  --progress-bg-color: #b672ff;
+
+  margin: 0;
+  width: 100%;
+  height: var(--progress-height);
+  -webkit-appearance: none;
+  cursor: pointer;
+  background: transparent;
+  position: relative;
+  overflow: hidden;
+
+  &::-webkit-slider-runnable-track {
+    position: relative;
+    height: var(--progress-height);
+    background: var(--progress-bg-color);
+  }
+  &::-webkit-slider-thumb {
+    --thumb-height: 1px;
+    --thumb-width: 1px;
+    position: relative;
+    -webkit-appearance: none;
+    width: var(--thumb-width, var(--thumb-height));
+    box-shadow: calc(-100vmax - var(--thumb-width, var(--thumb-height))) 0 0
+      100vmax var(--progress-color);
+  }
+
+  &::-webkit-slider-runnable-track {
+    background: var(--progress-bg-color);
+  }
+
+  /* FF */
+  &::-moz-range-track {
+    width: 100%;
+    height: var(--progress-height);
+    background: var(--progress-bg-color);
+    border: none;
+    border-radius: 0px;
+  }
+  &::-moz-range-thumb {
+    border: none;
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    background: transparent;
+  }
+  &::-moz-range-progress {
+    background-color: var(--progress-color);
+    height: var(--progress-height);
+  }
+`;
+export const BarPlayerProgressTime = styled.div`
+  color: #696969;
+  font-variant-numeric: lining-nums proportional-nums;
+  font-family: StratosSkyeng, sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px; /* 112.5% */
+  letter-spacing: 0.016px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
 export const BarPlayerBlock = styled.div`
   height: 73px;
   display: -webkit-box;
@@ -304,8 +374,43 @@ export const VolumeSvg = styled.svg`
   fill: transparent;
 `;
 export const VolumeProgress = styled.div`
-  width: 109px;
+  width: ${(props) => props.$width};
+  margin-top: -8px;
 `;
 export const VolumeProgressLine = styled.input`
-  width: 109px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  background: linear-gradient(
+    to right,
+    #fff ${(props) => `${props.volume}%, #797979 ${props.volume}%`}
+  );
+  &::-webkit-slider-runnable-track {
+    height: 2px;
+  }
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    background: black;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+  }
+  &::-moz-range-track {
+    height: 2px;
+  }
+  &::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    background: black;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+  }
+`;
+export const AudioFile = styled.audio`
+  display: none;
 `;

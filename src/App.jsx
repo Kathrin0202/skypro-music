@@ -1,16 +1,14 @@
 import { useState, useEffect } from "react";
 import * as S from "./components/Main/App.style";
-import { Login } from "./pages/login";
 import { AppRoutes } from "./routes";
 import { getPlaylist } from "./components/api";
 
 function App() {
   const [user, setUser] = useState(null);
-  const handleLogin = () => setUser({ login: "token" });
-  const handleLogOut = () => setUser(null);
   const [isLoading, setLoading] = useState(true);
   const [tracks, setPosts] = useState([]);
   const [currentTrack, setCurrentTrack] = useState(null);
+  const [trackTime, setTrackTime] = useState({});
   useEffect(() => {
     getPlaylist()
       .then((tracks) => {
@@ -28,16 +26,15 @@ function App() {
       <S.GlobalStyle />
       <S.Wrapper>
         <S.Container>
-          <Login
-            user={user}
-            onAuthButtonClick={user ? handleLogOut : handleLogin}
-          />
           <AppRoutes
             user={user}
+            setUser={setUser}
             isLoading={isLoading}
             tracks={tracks}
             currentTrack={currentTrack}
             setCurrentTrack={setCurrentTrack}
+            trackTime={trackTime}
+            setTrackTime={setTrackTime}
           />
           <footer></footer>
         </S.Container>
