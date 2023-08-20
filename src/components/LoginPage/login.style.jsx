@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ConteinerSignup = styled.div`
+export const ContainerEnter = styled.div`
   max-width: 100%;
   height: 100vh;
   margin: 0 auto;
@@ -30,7 +30,7 @@ export const ModalFormLogin = styled.form`
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 43px 44px 47px 40px;
+  padding: 43px 47px 47px 40px;
   & input:first-child {
     margin-bottom: 30px;
   }
@@ -45,7 +45,7 @@ export const ModalLogo = styled.div`
     height: auto;
   }
 `;
-export const ModalInputSignup = styled.input`
+export const ModalInput = styled.input`
   width: 100%;
   border-top: none;
   border-left: none;
@@ -85,14 +85,45 @@ export const ModalInputSignup = styled.input`
     color: #d0cece;
   }
 `;
-export const ModalBtnSignupEnt = styled.input`
+export const ModalBtnEnter = styled.button`
   width: 278px;
-  height: 62px;
+  height: 52px;
   background-color: #580ea2;
   border-radius: 6px;
-  margin-left: 4px;
+  margin-top: 60px;
+  margin-bottom: 20px;
   border: none;
-  margin-top: 30px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.05px;
+  color: #ffffff;
+  &:hover {
+    background-color: #3f007d;
+  }
+  &:active {
+    background-color: #271a58;
+  }
+`;
+export const ModalBtnSignup = styled.button`
+  width: 278px;
+  height: 52px;
+  background-color: transparent;
+  border: 1px solid #d0cece;
+  border-radius: 6px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.05px;
+  color: #000000;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -110,7 +141,7 @@ export const ModalBtnSignupEnt = styled.input`
     font-size: 18px;
     line-height: 24px;
     letter-spacing: -0.05px;
-    color: #ffffff;
+    color: #000000;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -122,10 +153,18 @@ export const ModalBtnSignupEnt = styled.input`
     justify-content: center;
   }
   &:hover {
-    background-color: #3f007d;
+    background-color: #f4f5f6;
   }
-
   &:active {
-    background-color: #271a58;
+    background-color: #d9d9d9;
   }
+`;
+
+export const Error = styled.div`
+  color: coral;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  margin-top: 20px;
+  text-align: left;
 `;

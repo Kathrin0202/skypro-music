@@ -2,13 +2,11 @@ import { Routes, Route } from "react-router-dom";
 import { MainPage } from "./components/Main/main";
 import { ProtectedRoute } from "./components/protector-route";
 import { Item } from "./pages/item";
-import { Login } from "./pages/Login/login";
 import { MyPlaylist } from "./pages/myPlaylist";
 import { NotFound } from "./pages/notFound";
-import { Registration } from "./pages/Registration/registr";
-
+import { Login } from "./pages/login";
+import { Registration } from "./pages/registration";
 export const AppRoutes = ({
-  user,
   isLoading,
   tracks,
   isOpen,
@@ -17,15 +15,14 @@ export const AppRoutes = ({
   setCurrentTrack,
   trackTime,
   setTrackTime,
-  setUser,
 }) => {
   return (
     <Routes>
-      <Route path="/" element={<Login user={user} setUser={setUser} />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/registration" element={<Registration />} />
-      <Route element={<ProtectedRoute isAllowed={Boolean(user)} />}>
+      <Route element={<ProtectedRoute isAllowed={Boolean(localStorage.getItem("user"))} />}>
         <Route
-          path="/main"
+          path="/"
           element={
             <MainPage
               isLoading={isLoading}

@@ -6,7 +6,7 @@ const Menu = () => {
     <S.NavMenu>
       <S.ListMenu>
         <S.MenuItem>
-          <Link to="/main">
+          <Link to="/">
             <S.MenuLink>Главное</S.MenuLink>
           </Link>
         </S.MenuItem>
@@ -16,7 +16,7 @@ const Menu = () => {
           </Link>
         </S.MenuItem>
         <S.MenuItem>
-          <Link to="/">
+          <Link to="/login">
             <S.MenuLink>Выйти</S.MenuLink>
           </Link>
         </S.MenuItem>
