@@ -1,25 +1,37 @@
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setShuffleTracks,
+  setPlayTracks,
+  setNextTracks,
+  setPrevTracks,
+} from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
 export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+  //const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
 
+  const dispatch = useDispatch();
+  const playlist = useSelector((state) => state.track.newPlaylist);
+  const tracks = useSelector((state) => state.track.trackId);
+  const isShuffle = useSelector((state) => state.track.shufflePlaylist);
+  const isPlayingTracks = useSelector((state) => state.track.playTrack);
+
   const handleClick = () => {
-    const trackIsPlaying = !isPlaying;
-    setIsPlaying(trackIsPlaying);
-    if (trackIsPlaying) {
+    if (!isPlayingTracks) {
       audioRef.current.play();
     } else {
       audioRef.current.pause();
     }
+    dispatch(setPlayTracks(isPlayingTracks));
   };
 
   useEffect(() => {
-    if (isPlaying) handleClick();
+    if (isPlayingTracks) handleClick();
   }, [currentTrack]);
 
   function formatTime(time) {
@@ -33,15 +45,31 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
   }
 
   const handlePrev = () => {
-    alert("Функция пока не готова");
+    if (currentTrack.id > 0) {
+      const index = currentTrack.id--;
+      const prevTracks = tracks[index];
+      dispatch(setPrevTracks({ prevTracks }));
+      console.log({ prevTracks });
+    }
+    dispatch(setPlayTracks(true));
   };
 
   const handleNext = () => {
-    alert("Функция пока не готова");
+    if (currentTrack.id < tracks.length - 1) {
+      const index = currentTrack.id++;
+      const nextTracks = tracks[index];
+      dispatch(setNextTracks({ nextTracks }));
+      console.log({ nextTracks });
+    } else {
+      dispatch(setNextTracks(0));
+    }
+    dispatch(setPlayTracks(true));
   };
+
   const handleShuffle = () => {
-    alert("Функция пока не готова");
+    dispatch(setShuffleTracks(!isShuffle));
   };
+
   const handleRepeat = () => {
     setIsRepeat(!isRepeat);
   };
@@ -66,10 +94,10 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
                 style={{ visibility: "hidden" }}
                 loop={isRepeat}
                 ref={audioRef}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
+                onPlay={() => setPlayTracks(true)}
+                onPause={() => setPlayTracks(false)}
                 onTimeUpdate={handleProgress}
-                volume
+                volume="true"
               >
                 <source
                   src={currentTrack.track_file}
@@ -84,13 +112,13 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
               <S.BarPlayerBlock>
                 <S.BarPlayer>
                   <S.PlayerControls>
-                    <S.PlayerBtn onClick={handlePrev}>
-                      <S.PlayerBtnPrevSvg alt="prev">
+                    <S.PlayerBtn>
+                      <S.PlayerBtnPrevSvg alt="prev" onClick={handlePrev}>
                         <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
                       </S.PlayerBtnPrevSvg>
                     </S.PlayerBtn>
                     <S.PlayerBtn>
-                      {isPlaying ? (
+                      {isPlayingTracks ? (
                         <S.PlayerBtnPlaySvg alt="pause" onClick={handleClick}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -109,18 +137,26 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
                         </S.PlayerBtnPlaySvg>
                       )}
                     </S.PlayerBtn>
-                    <S.PlayerBtnNext onClick={handleNext}>
-                      <S.PlayerBtnNextSvg alt="next">
+                    <S.PlayerBtnNext>
+                      <S.PlayerBtnNextSvg alt="next" onClick={handleNext}>
                         <use xlinkHref="img/icon/sprite.svg#icon-next"></use>
                       </S.PlayerBtnNextSvg>
                     </S.PlayerBtnNext>
-                    <S.PlayerBtnRepeat onClick={handleRepeat}>
-                      <S.PlayerBtnRepeatSvg alt="repeat">
+                    <S.PlayerBtnRepeat>
+                      <S.PlayerBtnRepeatSvg
+                        alt="repeat"
+                        className={isRepeat ? "_btn-icon-active" : "_btn-icon"}
+                        onClick={handleRepeat}
+                      >
                         <use xlinkHref="img/icon/sprite.svg#icon-repeat"></use>
                       </S.PlayerBtnRepeatSvg>
                     </S.PlayerBtnRepeat>
-                    <S.PlayerBtnShuffle onClick={handleShuffle}>
-                      <S.PlayerBtnShuffleSvg alt="shuffle">
+                    <S.PlayerBtnShuffle>
+                      <S.PlayerBtnShuffleSvg
+                        alt="shuffle"
+                        onClick={handleShuffle}
+                        className={isShuffle ? "_btn-icon-active" : "_btn-icon"}
+                      >
                         <use xlinkHref="img/icon/sprite.svg#icon-shuffle"></use>
                       </S.PlayerBtnShuffleSvg>
                     </S.PlayerBtnShuffle>

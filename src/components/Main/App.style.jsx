@@ -71,4 +71,35 @@ export const GlobalStyle = createGlobalStyle`
     font-family: "StratosSkyeng", sans-serif;
     color: #ffffff;
   }
+  ._btn-text:hover {
+    border-color: #d9b6ff;
+    color: #d9b6ff;
+    cursor: pointer;
+  }
+  
+  ._btn-text:active {
+    border-color: #ad61ff;
+    color: #ad61ff;
+    cursor: pointer;
+  }
+  
+  ._btn-icon:hover svg {
+    fill: transparent;
+    stroke: #acacac;
+    cursor: pointer;
+  }
+  
+  ._btn-icon:active svg,
+  ._btn-icon-active svg {
+    fill: transparent;
+    stroke: #ffffff;
+    cursor: pointer;
+  }
+  
+  ._btn-icon:active,
+  ._btn-icon:active {
+    fill: #696969;
+    stroke: #ffffff;
+    cursor: pointer;
+  }
 `;

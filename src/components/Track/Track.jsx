@@ -1,3 +1,5 @@
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentTracks } from "../../store/slices/playlist";
 import * as S from "./sceleton.style";
 
 export const TrackPage = ({ tracks, setCurrentTrack }) => {
@@ -6,15 +8,18 @@ export const TrackPage = ({ tracks, setCurrentTrack }) => {
     if (time.length < 2) return `0${time}`;
     return time;
   }
-
-  const playTrack = (musicAuthor, musicTitle, track_file, time) => {
+  const dispatch = useDispatch();
+  const isPlaying = useSelector((state) => state.track.playTrack);
+  const playTrack = (musicAuthor, musicTitle, track_file, time, id) => {
     setCurrentTrack({
       author: musicAuthor,
       name: musicTitle,
       track_file: track_file,
       duration_in_seconds: time,
       progress: 0,
+      id: id,
     });
+    dispatch(setCurrentTracks([...tracks]));
   };
   return (
     tracks &&
@@ -23,15 +28,27 @@ export const TrackPage = ({ tracks, setCurrentTrack }) => {
         <S.PlaylistItem
           key={song.id}
           onClick={() => {
-            playTrack(song.author, song.name, song.track_file, song.time);
+            playTrack(
+              song.author,
+              song.name,
+              song.track_file,
+              song.duration_in_seconds,
+              song.id
+            );
           }}
         >
           <S.PlaylistTrack>
             <S.TrackTitle>
               <S.TrackTitleImage>
-                <S.TrackTitleSvg alt="music">
-                  <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-                </S.TrackTitleSvg>
+                {isPlaying ? (
+                  <S.TrackTitleSvg alt="music" isPlaying={isPlaying}>
+                    <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                  </S.TrackTitleSvg>
+                ) : (
+                  <S.TrackTitleSvg alt="music">
+                    <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                  </S.TrackTitleSvg>
+                )}
               </S.TrackTitleImage>
               <S.TrackAuthor>
                 <S.TrackTitleLink>

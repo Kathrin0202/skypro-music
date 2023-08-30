@@ -73,6 +73,8 @@ export const TrackTitleSvg = styled.svg`
   height: 17px;
   fill: transparent;
   stroke: #4e4e4e;
+  animation: ${(props) =>
+    props.isPlaying ? "heartbeat 1.5s ease-in-out infinite both" : "none"};
 `;
 export const TrackTitleLink = styled.a`
   font-style: normal;
