@@ -5,9 +5,7 @@ import * as S from "./trackList.style";
 
 export function TrackList({
   isLoading,
-  tracks,
   setCurrentTrack,
-  currentTrack,
 }) {
   return (
     <S.MainCenterblock>
@@ -35,8 +33,6 @@ export function TrackList({
             <SceletonCard />
           ) : (
             <TrackPage
-              tracks={tracks}
-              currentTrack={currentTrack}
               setCurrentTrack={setCurrentTrack}
             />
           )}

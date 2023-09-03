@@ -73,9 +73,27 @@ export const TrackTitleSvg = styled.svg`
   height: 17px;
   fill: transparent;
   stroke: #4e4e4e;
-  animation: ${(props) =>
-    props.isPlaying ? "heartbeat 1.5s ease-in-out infinite both" : "none"};
 `;
+
+export const TrackSvg = styled.svg`
+  width: 16px;
+  height: 16px;
+  background-color: #b672ff;
+  border-radius: 8px;
+  display: block;
+  animation: bubble_out 0.6s ease-in-out infinite both;
+}
+
+@keyframes bubble_out {
+  0%,
+  to {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1);
+  }
+}`;
+
 export const TrackTitleLink = styled.a`
   font-style: normal;
   font-weight: 400;

@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "@testing-library/react";
 
 const initialState = {
   playTrack: false,
   newPlaylist: [],
   trackId: null,
-  shufflePlaylist: false,
+  shufflePlaylist: [],
 };
 
 export const tracksSlices = createSlice({
@@ -18,20 +19,31 @@ export const tracksSlices = createSlice({
       state.playTrack = !state.playTrack;
     },
     setCurrentTracks: (state, action) => {
-      state.trackId = action.payload;
-      state.playTrack = false;
+      const id = action.payload;
+      const toggledTrack = Object.values(state.newPlaylist).find(
+        (item) => item.id === id
+      );
+      state.playTrack = true;
+      state.trackId = { ...toggledTrack };
     },
     setNextTracks: (state, action) => {
-      state.newPlaylist = action.payload;
-      state.playTrack = false;
+      state.playTrack = true;
+      state.trackId = action.payload;
     },
     setPrevTracks: (state, action) => {
-      state.newPlaylist = action.payload;
-      state.playTrack = false;
+      const id = action.payload;
+      const prevTracks = Object.values(state.newPlaylist).find(
+        (item) => item.id === id
+      );
+      state.playTrack = true;
+      state.trackId = { ...prevTracks };
     },
     setShuffleTracks: (state, action) => {
-      state.shufflePlaylist = !state.shufflePlaylist;
-      state.trackId = state.trackId.sort(() => Math.round(Math.random() - 0.5));
+      const id = action.payload;
+      const shuffleTrack = Object.values(state.newPlaylist).find(
+        (item) => item.id === id
+      );
+      state.shufflePlaylist = { ...shuffleTrack };
     },
   },
 });

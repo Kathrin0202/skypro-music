@@ -1,15 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentTracks } from "../../store/slices/playlist";
+import { setCurrentTracks, setNewTracks } from "../../store/slices/playlist";
 import * as S from "./sceleton.style";
 
-export const TrackPage = ({ tracks, setCurrentTrack }) => {
+export const TrackPage = ({ setCurrentTrack }) => {
   function formatTime(number) {
     let time = String(number);
     if (time.length < 2) return `0${time}`;
     return time;
   }
   const dispatch = useDispatch();
-  const isPlaying = useSelector((state) => state.track.playTrack);
+  const tracks = useSelector((state) => state.track.newPlaylist);
+  const isPlaying = useSelector((state) => state.track.trackId);
   const playTrack = (musicAuthor, musicTitle, track_file, time, id) => {
     setCurrentTrack({
       author: musicAuthor,
@@ -19,7 +20,8 @@ export const TrackPage = ({ tracks, setCurrentTrack }) => {
       progress: 0,
       id: id,
     });
-    dispatch(setCurrentTracks([...tracks]));
+    dispatch(setCurrentTracks(id));
+    dispatch(setNewTracks(tracks));
   };
   return (
     tracks &&
@@ -40,10 +42,8 @@ export const TrackPage = ({ tracks, setCurrentTrack }) => {
           <S.PlaylistTrack>
             <S.TrackTitle>
               <S.TrackTitleImage>
-                {isPlaying ? (
-                  <S.TrackTitleSvg alt="music" isPlaying={isPlaying}>
-                    <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-                  </S.TrackTitleSvg>
+                {isPlaying?.id === song.id ? (
+                  <S.TrackSvg alt="music"></S.TrackSvg>
                 ) : (
                   <S.TrackTitleSvg alt="music">
                     <use xlinkHref="img/icon/sprite.svg#icon-note"></use>

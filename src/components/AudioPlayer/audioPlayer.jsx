@@ -3,21 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setShuffleTracks,
   setPlayTracks,
-  setNextTracks,
-  setPrevTracks,
+  setCurrentTracks,
 } from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
-export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
-  //const [isPlaying, setIsPlaying] = useState(false);
+export function AudioPlayer({ setTrackTime, trackTime }) {
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
 
   const dispatch = useDispatch();
   const playlist = useSelector((state) => state.track.newPlaylist);
-  const tracks = useSelector((state) => state.track.trackId);
+  const currentTrack = useSelector((state) => state.track.trackId);
   const isShuffle = useSelector((state) => state.track.shufflePlaylist);
   const isPlayingTracks = useSelector((state) => state.track.playTrack);
 
@@ -46,28 +45,35 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
 
   const handlePrev = () => {
     if (currentTrack.id > 0) {
-      const index = currentTrack.id--;
-      const prevTracks = tracks[index];
-      dispatch(setPrevTracks({ prevTracks }));
-      console.log({ prevTracks });
+      const index = currentTrack.id - 1;
+      const prevTracks = playlist[index - 1].id;
+      dispatch(setCurrentTracks(prevTracks));
     }
     dispatch(setPlayTracks(true));
   };
 
   const handleNext = () => {
-    if (currentTrack.id < tracks.length - 1) {
-      const index = currentTrack.id++;
-      const nextTracks = tracks[index];
-      dispatch(setNextTracks({ nextTracks }));
-      console.log({ nextTracks });
+    if (currentTrack.id < 15) {
+      const index = currentTrack.id + 1;
+      const nextTracks = playlist[index + 1].id;
+      dispatch(setCurrentTracks(nextTracks));
     } else {
-      dispatch(setNextTracks(0));
+      dispatch(setCurrentTracks(0));
     }
     dispatch(setPlayTracks(true));
   };
 
   const handleShuffle = () => {
-    dispatch(setShuffleTracks(!isShuffle));
+    const shuffleTracks = Object.values(currentTrack).sort(function () {
+      return Math.round(Math.random()) - 0.5;
+    });
+    if (shuffle) {
+      setShuffle(true);
+      dispatch(setShuffleTracks({ shuffleTracks }));
+    } else {
+      setShuffle(false);
+      dispatch(setShuffleTracks({}));
+    }
   };
 
   const handleRepeat = () => {
