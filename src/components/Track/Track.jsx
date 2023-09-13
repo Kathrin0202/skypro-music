@@ -11,6 +11,7 @@ export const TrackPage = ({ setCurrentTrack }) => {
   const dispatch = useDispatch();
   const tracks = useSelector((state) => state.track.newPlaylist);
   const isPlaying = useSelector((state) => state.track.trackId);
+  const play = useSelector((state) => state.track.playTrack);
   const playTrack = (musicAuthor, musicTitle, track_file, time, id) => {
     setCurrentTrack({
       author: musicAuthor,
@@ -42,7 +43,7 @@ export const TrackPage = ({ setCurrentTrack }) => {
           <S.PlaylistTrack>
             <S.TrackTitle>
               <S.TrackTitleImage>
-                {isPlaying?.id === song.id ? (
+                {play && isPlaying?.id === song.id ? (
                   <S.TrackSvg alt="music"></S.TrackSvg>
                 ) : (
                   <S.TrackTitleSvg alt="music">

@@ -4,6 +4,7 @@ import {
   setShuffleTracks,
   setPlayTracks,
   setCurrentTracks,
+  setNewTracks,
 } from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
@@ -26,12 +27,12 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
     } else {
       audioRef.current.pause();
     }
-    dispatch(setPlayTracks(isPlayingTracks));
+    dispatch(setPlayTracks(!isPlayingTracks));
   };
 
   useEffect(() => {
     if (isPlayingTracks) handleClick();
-  }, [currentTrack]);
+  }, [currentTrack?.track_file]);
 
   function formatTime(time) {
     let minutes = Math.floor(time / 60);
@@ -44,35 +45,55 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
   }
 
   const handlePrev = () => {
-    if (currentTrack.id > 0) {
-      const index = currentTrack.id - 1;
-      const prevTracks = playlist[index - 1].id;
-      dispatch(setCurrentTracks(prevTracks));
+    if (audioRef.current?.currentTime > 5) {
+      audioRef.current.currentTime = 0;
+      return;
     }
-    dispatch(setPlayTracks(true));
+    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
+    let index = Object.keys(trackList).find(
+      (key) => trackList[key].id === currentTrack.id
+    );
+    if (+index === 0) return;
+    index = +index - 1;
+    setCurrentTracks({
+      id: trackList[index].id,
+      author: trackList[index].author,
+      title: trackList[index].name,
+      track_file: trackList[index].track_file,
+      progress: 0,
+      time: trackList[index].duration_in_seconds,
+    });
+    dispatch(setCurrentTracks(trackList[index].id));
   };
 
   const handleNext = () => {
-    if (currentTrack.id < 15) {
-      const index = currentTrack.id + 1;
-      const nextTracks = playlist[index + 1].id;
-      dispatch(setCurrentTracks(nextTracks));
-    } else {
-      dispatch(setCurrentTracks(0));
-    }
-    dispatch(setPlayTracks(true));
+    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
+    let index = Object.keys(trackList).find(
+      (key) => trackList[key].id === currentTrack.id
+    );
+    if (+index === Object.keys(trackList).length - 1) return;
+    index = +index + 1;
+    setCurrentTracks({
+      id: trackList[index].id,
+      author: trackList[index].author,
+      title: trackList[index].name,
+      track_file: trackList[index].track_file,
+      progress: 0,
+      time: trackList[index].duration_in_seconds,
+    });
+    dispatch(setCurrentTracks(trackList[index].id));
   };
 
   const handleShuffle = () => {
-    const shuffleTracks = Object.values(currentTrack).sort(function () {
-      return Math.round(Math.random()) - 0.5;
-    });
     if (shuffle) {
-      setShuffle(true);
-      dispatch(setShuffleTracks({ shuffleTracks }));
-    } else {
       setShuffle(false);
       dispatch(setShuffleTracks({}));
+    } else {
+      const shuffleTracks = Object.values(playlist).sort(function () {
+        return Math.round(Math.random()) - 0.5;
+      });
+      setShuffle(true);
+      dispatch(setShuffleTracks({ ...shuffleTracks }));
     }
   };
 
@@ -87,6 +108,10 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       progress: (currentTimes / duration) * 100,
       length: duration,
     });
+    if (duration === currentTimes) {
+      handleNext();
+      dispatch(setPlayTracks(isPlayingTracks));
+    }
   };
 
   return (

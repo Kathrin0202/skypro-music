@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { act } from "@testing-library/react";
 
 const initialState = {
   playTrack: false,
@@ -16,7 +15,7 @@ export const tracksSlices = createSlice({
       state.newPlaylist = action.payload;
     },
     setPlayTracks: (state, action) => {
-      state.playTrack = !state.playTrack;
+      state.playTrack = action.payload;
     },
     setCurrentTracks: (state, action) => {
       const id = action.payload;
@@ -25,18 +24,6 @@ export const tracksSlices = createSlice({
       );
       state.playTrack = true;
       state.trackId = { ...toggledTrack };
-    },
-    setNextTracks: (state, action) => {
-      state.playTrack = true;
-      state.trackId = action.payload;
-    },
-    setPrevTracks: (state, action) => {
-      const id = action.payload;
-      const prevTracks = Object.values(state.newPlaylist).find(
-        (item) => item.id === id
-      );
-      state.playTrack = true;
-      state.trackId = { ...prevTracks };
     },
     setShuffleTracks: (state, action) => {
       const id = action.payload;
@@ -53,8 +40,6 @@ export const {
   setCurrentTracks,
   setShuffleTracks,
   setPlayTracks,
-  setNextTracks,
-  setPrevTracks,
 } = tracksSlices.actions;
 
 export default tracksSlices.reducer;
