@@ -4,6 +4,7 @@ import {
   setShuffleTracks,
   setPlayTracks,
   setCurrentTracks,
+  setNextTracks,
   setNewTracks,
 } from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
@@ -63,7 +64,9 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       progress: 0,
       time: trackList[index].duration_in_seconds,
     });
+    dispatch(setPlayTracks(isPlayingTracks));
     dispatch(setCurrentTracks(trackList[index].id));
+    console.log(trackList[index]);
   };
 
   const handleNext = () => {
@@ -81,7 +84,9 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       progress: 0,
       time: trackList[index].duration_in_seconds,
     });
+    dispatch(setPlayTracks(isPlayingTracks));
     dispatch(setCurrentTracks(trackList[index].id));
+    console.log(trackList[index]);
   };
 
   const handleShuffle = () => {
@@ -130,10 +135,7 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
                 onTimeUpdate={handleProgress}
                 volume="true"
               >
-                <source
-                  src={currentTrack.track_file}
-                  type="audio/mpeg"
-                ></source>
+                <source src={currentTrack.track_file}></source>
               </audio>
               <S.BarPlayerProgressTime>
                 {formatTime(audioRef.current?.currentTime || 0)}/
