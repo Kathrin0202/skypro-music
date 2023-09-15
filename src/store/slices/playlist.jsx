@@ -22,6 +22,7 @@ export const tracksSlices = createSlice({
       const toggledTrack = Object.values(state.newPlaylist).find(
         (item) => item.id === id
       );
+      state.playTrack = true;
       state.trackId = { ...toggledTrack };
     },
     setShuffleTracks: (state, action) => {

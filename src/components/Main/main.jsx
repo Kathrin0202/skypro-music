@@ -23,6 +23,7 @@ export const MainPage = ({
       <AudioPlayer
         trackTime={trackTime}
         setTrackTime={setTrackTime}
+        setCurrentTrack={setCurrentTrack}
       />
     </S.Main>
   );

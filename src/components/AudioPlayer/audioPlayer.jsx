@@ -4,14 +4,13 @@ import {
   setShuffleTracks,
   setPlayTracks,
   setCurrentTracks,
-  setNextTracks,
   setNewTracks,
 } from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
-export function AudioPlayer({ setTrackTime, trackTime }) {
+export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
@@ -64,7 +63,6 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       progress: 0,
       time: trackList[index].duration_in_seconds,
     });
-    dispatch(setPlayTracks(isPlayingTracks));
     dispatch(setCurrentTracks(trackList[index].id));
     console.log(trackList[index]);
   };
@@ -84,7 +82,6 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       progress: 0,
       time: trackList[index].duration_in_seconds,
     });
-    dispatch(setPlayTracks(isPlayingTracks));
     dispatch(setCurrentTracks(trackList[index].id));
     console.log(trackList[index]);
   };
@@ -126,6 +123,7 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
           <S.Bar>
             <S.BarContent>
               <audio
+                src={currentTrack.track_file}
                 controls
                 style={{ visibility: "hidden" }}
                 loop={isRepeat}
@@ -134,9 +132,7 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
                 onPause={() => setPlayTracks(false)}
                 onTimeUpdate={handleProgress}
                 volume="true"
-              >
-                <source src={currentTrack.track_file}></source>
-              </audio>
+              ></audio>
               <S.BarPlayerProgressTime>
                 {formatTime(audioRef.current?.currentTime || 0)}/
                 {formatTime(audioRef.current?.duration || 0)}
