@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { MainPage } from "./components/Main/main";
 import { ProtectedRoute } from "./components/protector-route";
 import { Item } from "./pages/item";
-import { MyPlaylist } from "./pages/myPlaylist";
+import { MyPlaylist } from "./pages/MyPlaylist/myPlaylist";
 import { NotFound } from "./pages/notFound";
 import { Login } from "./pages/login";
 import { Registration } from "./pages/registration";
@@ -20,7 +20,11 @@ export const AppRoutes = ({
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/registration" element={<Registration />} />
-      <Route element={<ProtectedRoute isAllowed={Boolean(localStorage.getItem("user"))} />}>
+      <Route
+        element={
+          <ProtectedRoute isAllowed={Boolean(localStorage.getItem("user"))} />
+        }
+      >
         <Route
           path="/"
           element={

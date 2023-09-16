@@ -1,26 +1,38 @@
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setShuffleTracks,
+  setPlayTracks,
+  setCurrentTracks,
+  setNewTracks,
+} from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
-export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
+
+  const dispatch = useDispatch();
+  const playlist = useSelector((state) => state.track.newPlaylist);
+  const currentTrack = useSelector((state) => state.track.trackId);
+  const isShuffle = useSelector((state) => state.track.shufflePlaylist);
+  const isPlayingTracks = useSelector((state) => state.track.playTrack);
 
   const handleClick = () => {
-    const trackIsPlaying = !isPlaying;
-    setIsPlaying(trackIsPlaying);
-    if (trackIsPlaying) {
+    if (!isPlayingTracks) {
       audioRef.current.play();
     } else {
       audioRef.current.pause();
     }
+    dispatch(setPlayTracks(!isPlayingTracks));
   };
 
   useEffect(() => {
-    if (isPlaying) handleClick();
-  }, [currentTrack]);
+    if (isPlayingTracks) handleClick();
+  }, [currentTrack?.track_file]);
 
   function formatTime(time) {
     let minutes = Math.floor(time / 60);
@@ -33,15 +45,60 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
   }
 
   const handlePrev = () => {
-    alert("Функция пока не готова");
+    if (audioRef.current?.currentTime > 5) {
+      audioRef.current.currentTime = 0;
+      return;
+    }
+    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
+    let index = Object.keys(trackList).find(
+      (key) => trackList[key].id === currentTrack.id
+    );
+    if (+index === 0) return;
+    index = +index - 1;
+    setCurrentTracks({
+      id: trackList[index].id,
+      author: trackList[index].author,
+      title: trackList[index].name,
+      track_file: trackList[index].track_file,
+      progress: 0,
+      time: trackList[index].duration_in_seconds,
+    });
+    dispatch(setCurrentTracks(trackList[index].id));
+    console.log(trackList[index]);
   };
 
   const handleNext = () => {
-    alert("Функция пока не готова");
+    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
+    let index = Object.keys(trackList).find(
+      (key) => trackList[key].id === currentTrack.id
+    );
+    if (+index === Object.keys(trackList).length - 1) return;
+    index = +index + 1;
+    setCurrentTracks({
+      id: trackList[index].id,
+      author: trackList[index].author,
+      title: trackList[index].name,
+      track_file: trackList[index].track_file,
+      progress: 0,
+      time: trackList[index].duration_in_seconds,
+    });
+    dispatch(setCurrentTracks(trackList[index].id));
+    console.log(trackList[index]);
   };
+
   const handleShuffle = () => {
-    alert("Функция пока не готова");
+    if (shuffle) {
+      setShuffle(false);
+      dispatch(setShuffleTracks({}));
+    } else {
+      const shuffleTracks = Object.values(playlist).sort(function () {
+        return Math.round(Math.random()) - 0.5;
+      });
+      setShuffle(true);
+      dispatch(setShuffleTracks({ ...shuffleTracks }));
+    }
   };
+
   const handleRepeat = () => {
     setIsRepeat(!isRepeat);
   };
@@ -53,6 +110,10 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
       progress: (currentTimes / duration) * 100,
       length: duration,
     });
+    if (duration === currentTimes) {
+      handleNext();
+      dispatch(setPlayTracks(isPlayingTracks));
+    }
   };
 
   return (
@@ -62,20 +123,16 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
           <S.Bar>
             <S.BarContent>
               <audio
+                src={currentTrack.track_file}
                 controls
                 style={{ visibility: "hidden" }}
                 loop={isRepeat}
                 ref={audioRef}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
+                onPlay={() => setPlayTracks(true)}
+                onPause={() => setPlayTracks(false)}
                 onTimeUpdate={handleProgress}
-                volume
-              >
-                <source
-                  src={currentTrack.track_file}
-                  type="audio/mpeg"
-                ></source>
-              </audio>
+                volume="true"
+              ></audio>
               <S.BarPlayerProgressTime>
                 {formatTime(audioRef.current?.currentTime || 0)}/
                 {formatTime(audioRef.current?.duration || 0)}
@@ -84,13 +141,13 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
               <S.BarPlayerBlock>
                 <S.BarPlayer>
                   <S.PlayerControls>
-                    <S.PlayerBtn onClick={handlePrev}>
-                      <S.PlayerBtnPrevSvg alt="prev">
+                    <S.PlayerBtn>
+                      <S.PlayerBtnPrevSvg alt="prev" onClick={handlePrev}>
                         <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
                       </S.PlayerBtnPrevSvg>
                     </S.PlayerBtn>
                     <S.PlayerBtn>
-                      {isPlaying ? (
+                      {isPlayingTracks ? (
                         <S.PlayerBtnPlaySvg alt="pause" onClick={handleClick}>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -109,18 +166,26 @@ export function AudioPlayer({ currentTrack, setTrackTime, trackTime }) {
                         </S.PlayerBtnPlaySvg>
                       )}
                     </S.PlayerBtn>
-                    <S.PlayerBtnNext onClick={handleNext}>
-                      <S.PlayerBtnNextSvg alt="next">
+                    <S.PlayerBtnNext>
+                      <S.PlayerBtnNextSvg alt="next" onClick={handleNext}>
                         <use xlinkHref="img/icon/sprite.svg#icon-next"></use>
                       </S.PlayerBtnNextSvg>
                     </S.PlayerBtnNext>
-                    <S.PlayerBtnRepeat onClick={handleRepeat}>
-                      <S.PlayerBtnRepeatSvg alt="repeat">
+                    <S.PlayerBtnRepeat>
+                      <S.PlayerBtnRepeatSvg
+                        alt="repeat"
+                        className={isRepeat ? "_btn-icon-active" : "_btn-icon"}
+                        onClick={handleRepeat}
+                      >
                         <use xlinkHref="img/icon/sprite.svg#icon-repeat"></use>
                       </S.PlayerBtnRepeatSvg>
                     </S.PlayerBtnRepeat>
-                    <S.PlayerBtnShuffle onClick={handleShuffle}>
-                      <S.PlayerBtnShuffleSvg alt="shuffle">
+                    <S.PlayerBtnShuffle>
+                      <S.PlayerBtnShuffleSvg
+                        alt="shuffle"
+                        onClick={handleShuffle}
+                        className={isShuffle ? "_btn-icon-active" : "_btn-icon"}
+                      >
                         <use xlinkHref="img/icon/sprite.svg#icon-shuffle"></use>
                       </S.PlayerBtnShuffleSvg>
                     </S.PlayerBtnShuffle>

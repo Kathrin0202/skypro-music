@@ -1,12 +1,8 @@
-import { TrackPage } from "../Track/Track";
-import { SceletonCard } from "../Track/sceleton";
-import { Filter } from "../Filter/filter";
-import * as S from "./trackList.style";
+import { TrackPage } from "../../components/Track/Track";
+import { SceletonCard } from "../../components/Track/sceleton";
+import * as S from "../../components/TrackList/trackList.style";
 
-export function TrackList({
-  isLoading,
-  setCurrentTrack,
-}) {
+export function MyTrack({ isLoading, setCurrentTrack }) {
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
@@ -15,8 +11,7 @@ export function TrackList({
         </S.SearchSvg>
         <S.SearchText type="search" placeholder="Поиск" name="search" />
       </S.CenterblockSearch>
-      <S.CenterblockH2>Треки</S.CenterblockH2>
-      <Filter />
+      <S.CenterblockH2>Мои треки</S.CenterblockH2>
       <S.CenterblockContent>
         <S.ContentTitle>
           <S.PlaylistTitleCol1>Трек</S.PlaylistTitleCol1>
@@ -29,13 +24,7 @@ export function TrackList({
           </S.PlaylistTitleCol4>
         </S.ContentTitle>
         <S.ContentPlaylist>
-          {isLoading ? (
-            <SceletonCard />
-          ) : (
-            <TrackPage
-              setCurrentTrack={setCurrentTrack}
-            />
-          )}
+          {isLoading ? <SceletonCard /> : <p>В этом плейлисте нет треков</p>}
         </S.ContentPlaylist>
       </S.CenterblockContent>
     </S.MainCenterblock>
