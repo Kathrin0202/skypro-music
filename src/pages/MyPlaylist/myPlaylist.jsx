@@ -15,7 +15,6 @@ export const MyPlaylist = ({
       <Nav />
       <MyTrack isLoading={isLoading} setCurrentTrack={setCurrentTrack} />
       <SideBar isLoading={isLoading} tracks={tracks} />
-      <AudioPlayer trackTime={trackTime} setTrackTime={setTrackTime} />
     </S.Main>
   );
 };

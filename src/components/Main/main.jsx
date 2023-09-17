@@ -20,11 +20,6 @@ export const MainPage = ({
         setCurrentTrack={setCurrentTrack}
       />
       <SideBar isLoading={isLoading} tracks={tracks} />
-      <AudioPlayer
-        trackTime={trackTime}
-        setTrackTime={setTrackTime}
-        setCurrentTrack={setCurrentTrack}
-      />
     </S.Main>
   );
 };

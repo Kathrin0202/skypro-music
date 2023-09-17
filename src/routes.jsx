@@ -40,7 +40,21 @@ export const AppRoutes = ({
             />
           }
         />
-        <Route path="/myplaylist" element={<MyPlaylist />} />
+        <Route
+          path="/myplaylist"
+          element={
+            <MyPlaylist
+              isLoading={isLoading}
+              tracks={tracks}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              currentTrack={currentTrack}
+              setCurrentTrack={setCurrentTrack}
+              trackTime={trackTime}
+              setTrackTime={setTrackTime}
+            />
+          }
+        />
         <Route path="/item/:id" element={<Item />} />
       </Route>
       <Route path="*" element={<NotFound />} />

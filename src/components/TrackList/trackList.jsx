@@ -3,10 +3,7 @@ import { SceletonCard } from "../Track/sceleton";
 import { Filter } from "../Filter/filter";
 import * as S from "./trackList.style";
 
-export function TrackList({
-  isLoading,
-  setCurrentTrack,
-}) {
+export function TrackList({ isLoading, setCurrentTrack }) {
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
@@ -32,9 +29,7 @@ export function TrackList({
           {isLoading ? (
             <SceletonCard />
           ) : (
-            <TrackPage
-              setCurrentTrack={setCurrentTrack}
-            />
+            <TrackPage setCurrentTrack={setCurrentTrack} />
           )}
         </S.ContentPlaylist>
       </S.CenterblockContent>

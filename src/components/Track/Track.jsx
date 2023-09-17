@@ -1,4 +1,9 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  useDislikeTrackMutation,
+  useLikeTrackMutation,
+} from "../../services/myTracks";
 import { setCurrentTracks, setNewTracks } from "../../store/slices/playlist";
 import * as S from "./sceleton.style";
 
@@ -24,6 +29,23 @@ export const TrackPage = ({ setCurrentTrack }) => {
     dispatch(setCurrentTracks(id));
     dispatch(setNewTracks(tracks));
   };
+
+  const [like, { likeError }] = useLikeTrackMutation();
+  const [dislike, { dislikeError }] = useDislikeTrackMutation();
+  const [isLiked, setIsLiked] = useState(false);
+
+  const handleLike = (id) => {
+    setIsLiked(true);
+    like({ id });
+  };
+
+  const handleDislike = (id) => {
+    setIsLiked(false);
+    dislike({ id });
+  };
+
+  const togleLikeDislike = (id) =>
+    isLiked ? handleDislike(id) : handleLike(id);
   return (
     tracks &&
     tracks.map((song) => {
@@ -64,8 +86,18 @@ export const TrackPage = ({ setCurrentTrack }) => {
               <S.TrackAlbumLink href="http://">{song.album}</S.TrackAlbumLink>
             </S.TrackAlbum>
             <S.TrackTime>
-              <S.TrackTimeSvg alt="time">
-                <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              <S.TrackTimeSvg
+                alt="like"
+                onClick={() => togleLikeDislike(song.id)}
+              >
+                {isLiked ? (
+                  <use
+                    xlinkHref="img/icon/sprite.svg#icon-like"
+                    fill="#696969"
+                  ></use>
+                ) : (
+                  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+                )}
               </S.TrackTimeSvg>
               <S.TrackTimeText>
                 {formatTime(Math.floor((song.duration_in_seconds % 3600) / 60))}

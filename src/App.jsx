@@ -4,6 +4,7 @@ import { AppRoutes } from "./routes";
 import { getPlaylist } from "./components/api";
 import { useDispatch } from "react-redux";
 import { setNewTracks } from "./store/slices/playlist";
+import { AudioPlayer } from "./components/AudioPlayer/audioPlayer";
 
 export const UserContext = createContext("");
 
@@ -42,6 +43,7 @@ function App() {
             setTrackTime={setTrackTime}
             setUser={setUser}
           />
+          <AudioPlayer trackTime={trackTime} setTrackTime={setTrackTime} />
           <footer></footer>
         </UserContext.Provider>
       </S.Container>

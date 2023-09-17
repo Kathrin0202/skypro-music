@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import * as S from "./login.style";
 import { useContext, useEffect, useState } from "react";
-import { registerUser, loginUser } from "../api";
+import { registerUser, loginUser, getToken, refreshToken } from "../api";
 import { UserContext } from "../../App";
 
 export function LoginPage({ isLoginMode = false }) {
@@ -34,6 +34,14 @@ export function LoginPage({ isLoginMode = false }) {
       })
       .finally(() => {
         setLogin(false);
+      });
+    getToken({ email, password })
+      .then(async (token) => {
+        const tokenRefresh = token.refresh;
+        refreshToken(tokenRefresh);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 

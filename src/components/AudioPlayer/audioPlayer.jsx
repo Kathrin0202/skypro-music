@@ -4,13 +4,12 @@ import {
   setShuffleTracks,
   setPlayTracks,
   setCurrentTracks,
-  setNewTracks,
 } from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
-export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
+export function AudioPlayer({ setTrackTime, trackTime }) {
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
@@ -64,7 +63,6 @@ export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
       time: trackList[index].duration_in_seconds,
     });
     dispatch(setCurrentTracks(trackList[index].id));
-    console.log(trackList[index]);
   };
 
   const handleNext = () => {
@@ -83,7 +81,6 @@ export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
       time: trackList[index].duration_in_seconds,
     });
     dispatch(setCurrentTracks(trackList[index].id));
-    console.log(trackList[index]);
   };
 
   const handleShuffle = () => {
@@ -112,7 +109,7 @@ export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
     });
     if (duration === currentTimes) {
       handleNext();
-      dispatch(setPlayTracks(isPlayingTracks));
+      dispatch(setPlayTracks(!isPlayingTracks));
     }
   };
 
@@ -120,19 +117,19 @@ export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
     <>
       {currentTrack ? (
         <>
+          <audio
+            src={currentTrack.track_file}
+            controls
+            style={{ visibility: "hidden" }}
+            loop={isRepeat}
+            ref={audioRef}
+            onPlay={() => setPlayTracks(true)}
+            onPause={() => setPlayTracks(false)}
+            onTimeUpdate={handleProgress}
+            volume="true"
+          ></audio>
           <S.Bar>
             <S.BarContent>
-              <audio
-                src={currentTrack.track_file}
-                controls
-                style={{ visibility: "hidden" }}
-                loop={isRepeat}
-                ref={audioRef}
-                onPlay={() => setPlayTracks(true)}
-                onPause={() => setPlayTracks(false)}
-                onTimeUpdate={handleProgress}
-                volume="true"
-              ></audio>
               <S.BarPlayerProgressTime>
                 {formatTime(audioRef.current?.currentTime || 0)}/
                 {formatTime(audioRef.current?.duration || 0)}
