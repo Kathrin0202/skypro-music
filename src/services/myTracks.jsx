@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const TRACKS_TAG = { type: "FavoriteTracks", id: "LIST" };
+const TRACKS_TAG = { type: "Tracks", id: "LIST" };
 
 const getTokenAccess = () => {
   const token = JSON.parse(JSON.parse(sessionStorage.getItem("tokenData")));
@@ -9,14 +9,15 @@ const getTokenAccess = () => {
 };
 
 export const favoriteTracksApi = createApi({
-  reducerPath: "playlistApi",
+  reducerPath: "favoriteTracksApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://skypro-music-api.skyeng.tech/catalog/track",
+    baseUrl: "https://skypro-music-api.skyeng.tech/catalog/track/",
   }),
   endpoints: (builder) => ({
     getMyPlaylist: builder.query({
       query: () => ({
-        url: "/favorite/all/",
+        url: "favorite/all/",
+        method: "GET",
         headers: { Authorization: `Bearer ${getTokenAccess()}` },
       }),
       providesTags: (result = []) => [
@@ -25,31 +26,24 @@ export const favoriteTracksApi = createApi({
       ],
     }),
     likeTrack: builder.mutation({
-      query(data) {
-        const { id } = data;
-        return {
-          url: `/${id}/favorite/`,
-          headers: { Authorization: `Bearer ${getTokenAccess()}` },
-          method: "POST",
-        };
-      },
-      invalidatesTags: (post) => [{ type: TRACKS_TAG.type, id: post.id }],
+      query: ({ id }) => ({
+        url: `${id}/favorite/`,
+        headers: { Authorization: `Bearer ${getTokenAccess()}` },
+        method: "POST",
+      }),
+      invalidatesTags: (post) => [{ type: TRACKS_TAG.type, id: post?.id }],
     }),
 
     dislikeTrack: builder.mutation({
-      query(data) {
-        const { id } = data;
-        return {
-          url: `${id}/favorite/`,
-          headers: { Authorization: `Bearer ${getTokenAccess()}` },
-          method: "DELETE",
-        };
-      },
-      invalidatesTags: (post) => [{ type: TRACKS_TAG.type, id: post.id }],
+      query: ({ id }) => ({
+        url: `${id}/favorite/`,
+        headers: { Authorization: `Bearer ${getTokenAccess()}` },
+        method: "DELETE",
+      }),
+      invalidatesTags: (post) => [{ type: TRACKS_TAG.type, id: post?.id }],
     }),
   }),
 });
-
 export const {
   useGetMyPlaylistQuery,
   useLikeTrackMutation,

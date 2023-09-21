@@ -1,12 +1,12 @@
-import { MyTrackList } from "./myTrackList";
+import { MyTrackList } from "../MyPlaylist/myTrackList";
 import { SceletonCard } from "../../components/Track/sceleton";
 import * as S from "../../components/TrackList/trackList.style";
 import { useGetMyPlaylistQuery } from "../../services/myTracks";
 
-export function MyTrack({ isLoading, setCurrentTrack, setIsOpenPlayer }) {
-  const { data, error } = useGetMyPlaylistQuery();
+export function MyTrack({ setCurrentTrack }) {
+  const { data, isLoading, error } = useGetMyPlaylistQuery();
   if (error) return <h2>В этом плейлисте нет треков</h2>;
-
+  console.log(useGetMyPlaylistQuery);
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
@@ -32,8 +32,9 @@ export function MyTrack({ isLoading, setCurrentTrack, setIsOpenPlayer }) {
             <SceletonCard />
           ) : (
             <MyTrackList
-              musicItems={data}
+              tracks={data}
               isMyTrack={true}
+              setCurrentTrack={setCurrentTrack}
             />
           )}
         </S.ContentPlaylist>

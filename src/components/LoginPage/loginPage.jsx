@@ -23,26 +23,20 @@ export function LoginPage({ isLoginMode = false }) {
       return;
     }
     setLogin(true);
-    loginUser({ email, password })
-      .then((data) => {
-        setUser(data);
-        localStorage.setItem("user", JSON.stringify(data));
-        navigate("/");
-      })
-      .catch((erro) => {
-        setError(erro.message);
-      })
-      .finally(() => {
-        setLogin(false);
-      });
-    getToken({ email, password })
-      .then(async (token) => {
-        const tokenRefresh = token.refresh;
-        refreshToken(tokenRefresh);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    loginUser({ email, password }).then((data) => {
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      navigate("/");
+    });
+    try {
+      const token = getToken({ email, password });
+      const tokenRefresh = token.refresh;
+      const access = refreshToken(tokenRefresh);
+    } catch (erro) {
+      setError(erro.message);
+    } finally {
+      setLogin(false);
+    }
   };
 
   const handleRegister = async ({ email, password }) => {

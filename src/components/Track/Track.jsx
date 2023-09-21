@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { UserContext } from "../../App";
 import {
   useDislikeTrackMutation,
   useLikeTrackMutation,
 } from "../../services/myTracks";
 import { setCurrentTracks, setNewTracks } from "../../store/slices/playlist";
 import * as S from "./sceleton.style";
+function formatTime(number) {
+  let time = String(number);
+  if (time.length < 2) return `0${time}`;
+  return time;
+}
 
 export const TrackPage = ({ setCurrentTrack }) => {
-  function formatTime(number) {
-    let time = String(number);
-    if (time.length < 2) return `0${time}`;
-    return time;
-  }
   const dispatch = useDispatch();
   const tracks = useSelector((state) => state.track.newPlaylist);
   const isPlaying = useSelector((state) => state.track.trackId);
@@ -32,7 +33,10 @@ export const TrackPage = ({ setCurrentTrack }) => {
 
   const [like, { likeError }] = useLikeTrackMutation();
   const [dislike, { dislikeError }] = useDislikeTrackMutation();
-  const [isLiked, setIsLiked] = useState(false);
+  const userLike =
+    tracks.isMyTrack ||
+    Boolean(tracks.staredUser?.find((item) => item.id === tracks.user.id));
+  const [isLiked, setIsLiked] = useState(userLike);
 
   const handleLike = (id) => {
     setIsLiked(true);
@@ -44,8 +48,6 @@ export const TrackPage = ({ setCurrentTrack }) => {
     dislike({ id });
   };
 
-  const togleLikeDislike = (id) =>
-    isLiked ? handleDislike(id) : handleLike(id);
   return (
     tracks &&
     tracks.map((song) => {
@@ -86,19 +88,21 @@ export const TrackPage = ({ setCurrentTrack }) => {
               <S.TrackAlbumLink href="http://">{song.album}</S.TrackAlbumLink>
             </S.TrackAlbum>
             <S.TrackTime>
-              <S.TrackTimeSvg
-                alt="like"
-                onClick={() => togleLikeDislike(song.id)}
-              >
-                {isLiked ? (
+              {isLiked ? (
+                <S.TrackTimeSvg
+                  alt="like"
+                  onClick={() => handleDislike(song.id)}
+                >
                   <use
                     xlinkHref="img/icon/sprite.svg#icon-like"
                     fill="#696969"
                   ></use>
-                ) : (
+                </S.TrackTimeSvg>
+              ) : (
+                <S.TrackTimeSvg alt="like" onClick={() => handleLike(song.id)}>
                   <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                )}
-              </S.TrackTimeSvg>
+                </S.TrackTimeSvg>
+              )}
               <S.TrackTimeText>
                 {formatTime(Math.floor((song.duration_in_seconds % 3600) / 60))}
                 :

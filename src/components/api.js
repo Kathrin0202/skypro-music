@@ -81,7 +81,7 @@ export async function getToken({ email, password }) {
 
   if (response.status === 401) {
     const errorData = await response.json();
-    let errorMessage = "Ошибка";
+    let errorMessage = "";
 
     if (errorData.hasOwnProperty("detail")) {
       errorMessage = errorData.detail;

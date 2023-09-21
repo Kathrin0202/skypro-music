@@ -1,11 +1,8 @@
-import { AudioPlayer } from "../../components/AudioPlayer/audioPlayer";
 import { Nav } from "../../components/NavMenu/navMenu";
 import * as S from "../../components/Main/App.style";
 import { MyTrack } from "./myTrack";
 import { SideBar } from "../../components/SideBar/sideBar";
 export const MyPlaylist = ({
-  trackTime,
-  setTrackTime,
   isLoading,
   setCurrentTrack,
   tracks,
@@ -13,7 +10,11 @@ export const MyPlaylist = ({
   return (
     <S.Main>
       <Nav />
-      <MyTrack isLoading={isLoading} setCurrentTrack={setCurrentTrack} />
+      <MyTrack
+        isLoading={isLoading}
+        setCurrentTrack={setCurrentTrack}
+        tracks={tracks}
+      />
       <SideBar isLoading={isLoading} tracks={tracks} />
     </S.Main>
   );
