@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  useDislikeTrackMutation,
+  useLikeTrackMutation,
+} from "../../services/myTracks";
+import { useAuthSelector } from "../../store/slices/auth";
+import {
   setShuffleTracks,
   setPlayTracks,
   setCurrentTracks,
@@ -9,7 +14,8 @@ import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
-export function AudioPlayer({ setTrackTime, trackTime }) {
+export function AudioPlayer() {
+  const [trackTime, setTrackTime] = useState({});
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
@@ -61,6 +67,7 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       track_file: trackList[index].track_file,
       progress: 0,
       time: trackList[index].duration_in_seconds,
+      staredUser: trackList[index].stared_user,
     });
     dispatch(setCurrentTracks(trackList[index].id));
   };
@@ -112,6 +119,24 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       handleNext();
       dispatch(setPlayTracks(!isPlayingTracks));
     }
+  };
+  let auth = useAuthSelector();
+  const [like, { likeError }] = useLikeTrackMutation();
+  const [dislike, { dislikeError }] = useDislikeTrackMutation();
+  const isLike = (currentTrack?.stared_user ?? []).find(
+    ({ id }) => id === auth.id
+  );
+
+  const handleLike = () => {
+    like({
+      id: currentTrack.id,
+    });
+  };
+
+  const handleDislike = () => {
+    dislike({
+      id: currentTrack.id,
+    });
   };
 
   return (
@@ -209,16 +234,22 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
                     </S.TrackPlayContain>
 
                     <S.TrackPlayLike>
-                      <S.TrackPlayLikeBtn>
-                        <S.TrackPlayLikeSvg alt="like">
-                          <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                        </S.TrackPlayLikeSvg>
-                      </S.TrackPlayLikeBtn>
-                      <S.TrackPlayDislike>
-                        <S.TrackPlayDislikeSvg alt="dislike">
-                          <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
-                        </S.TrackPlayDislikeSvg>
-                      </S.TrackPlayDislike>
+                      {!isLike ? (
+                        <S.TrackPlayLikeBtn>
+                          <S.TrackPlayLikeSvg alt="like" onClick={handleLike}>
+                            <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+                          </S.TrackPlayLikeSvg>
+                        </S.TrackPlayLikeBtn>
+                      ) : (
+                        <S.TrackPlayDislike>
+                          <S.TrackPlayDislikeSvg
+                            alt="dislike"
+                            onClick={handleDislike}
+                          >
+                            <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
+                          </S.TrackPlayDislikeSvg>
+                        </S.TrackPlayDislike>
+                      )}
                     </S.TrackPlayLike>
                   </S.PlayerTrackPlay>
                 </S.BarPlayer>

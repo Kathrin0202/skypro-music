@@ -7,7 +7,7 @@ export const MyPlaylist = ({ setCurrentTrack }) => {
     <S.Main>
       <Nav />
       <MyTrack setCurrentTrack={setCurrentTrack} />
-      <SideBar />
+      <SideBar setCurrentTrack={setCurrentTrack}/>
     </S.Main>
   );
 };

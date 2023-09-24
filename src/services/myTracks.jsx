@@ -94,6 +94,17 @@ export const favoriteTracksApi = createApi({
         return transformedResponse;
       },
     }),
+    getCategory: builder.query({
+      query: ({ id }) => ({
+        url: `/catalog/selection/${id}/`,
+      }),
+      providesTags: (result = []) => [
+        ...(Array.isArray(result)
+          ? result.map(({ id }) => ({ type: TRACKS_TAG.type, id }))
+          : []),
+        TRACKS_TAG,
+      ],
+    }),
 
     likeTrack: builder.mutation({
       query(data) {
@@ -121,6 +132,7 @@ export const favoriteTracksApi = createApi({
 export const {
   useGetMyPlaylistQuery,
   useGetAllMyTracksQuery,
+  useGetCategoryQuery,
   useLikeTrackMutation,
   useDislikeTrackMutation,
 } = favoriteTracksApi;

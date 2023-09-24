@@ -3,20 +3,12 @@ import { SideBar } from "../SideBar/sideBar";
 import { TrackList } from "../TrackList/trackList";
 import * as S from "./App.style";
 
-export const MainPage = ({
-  isLoading,
-  tracks,
-  setCurrentTrack,
-}) => {
+export const MainPage = ({ isLoading, setCurrentTrack, tracks }) => {
   return (
     <S.Main>
       <Nav />
-      <TrackList
-        isLoading={isLoading}
-        tracks={tracks}
-        setCurrentTrack={setCurrentTrack}
-      />
-      <SideBar isLoading={isLoading} tracks={tracks} />
+      <TrackList isLoading={isLoading} setCurrentTrack={setCurrentTrack} />
+      <SideBar isLoading={isLoading} setCurrentTrack={setCurrentTrack} />
     </S.Main>
   );
 };

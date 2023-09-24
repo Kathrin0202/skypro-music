@@ -12,7 +12,6 @@ function App() {
   const [isLoading, setLoading] = useState(true);
   const [tracks, setPosts] = useState([]);
   const [currentTrack, setCurrentTrack] = useState(null);
-  const [trackTime, setTrackTime] = useState({});
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const dispatch = useDispatch();
 
@@ -39,11 +38,10 @@ function App() {
             isLoading={isLoading}
             tracks={tracks}
             setCurrentTrack={setCurrentTrack}
-            trackTime={trackTime}
-            setTrackTime={setTrackTime}
             setUser={setUser}
+            currentTrack={currentTrack}
           />
-          <AudioPlayer trackTime={trackTime} setTrackTime={setTrackTime} />
+          <AudioPlayer />
           <footer></footer>
         </UserContext.Provider>
       </S.Container>

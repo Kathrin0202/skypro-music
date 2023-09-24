@@ -1,5 +1,4 @@
 import Skeleton from "react-loading-skeleton";
-import { playlist } from "../playlist";
 import * as S from "./sceleton.style";
 
 export const SceletonCard = () => {
@@ -53,18 +52,24 @@ export const SceletonCard = () => {
 };
 
 export const SkeletonItem = () => {
-  return playlist.map((play, index) => {
-    return (
-      <S.SideBarItem
-        key={index}
-        style={{
-          width: "250px",
-          height: "150px",
-          backgroundColor: "rgba(49, 49, 49, 1)",
-        }}
-      >
-        <Skeleton />
-      </S.SideBarItem>
-    );
-  });
+  return (
+    <>
+      {Array(3)
+        .fill()
+        .map((play, index) => {
+          return (
+            <S.SideBarItem
+              key={index}
+              style={{
+                width: "250px",
+                height: "150px",
+                backgroundColor: "rgba(49, 49, 49, 1)",
+              }}
+            >
+              <Skeleton />
+            </S.SideBarItem>
+          );
+        })}
+    </>
+  );
 };
