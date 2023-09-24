@@ -2,10 +2,12 @@ import { SceletonCard } from "../../components/Track/sceleton";
 import { TrackPage } from "../../components/Track/Track";
 import * as S from "../../components/TrackList/trackList.style";
 import { useGetAllMyTracksQuery } from "../../services/myTracks";
+import { useAuthSelector } from "../../store/slices/auth";
 import { MyTrackList } from "./myTrackList";
 
 export function MyTrack({ setCurrentTrack }) {
-  const { data = [], isLoading, error } = useGetAllMyTracksQuery();
+  const auth = useAuthSelector();
+  const { data = [], isLoading, error } = useGetAllMyTracksQuery({ auth });
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>

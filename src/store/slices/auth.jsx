@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const AUTH_KEY = "auth";
 
 function getAuthFromLocalStorage() {
@@ -39,3 +41,17 @@ const authSlice = createSlice({
 });
 export const { setAuth } = authSlice.actions;
 export const authReducer = authSlice.reducer;
+
+export const useLogout = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  return () => {
+    dispatch(setAuth(null));
+    navigate("/login");
+  };
+};
+
+export const useAuthSelector = () => {
+  const auth = useSelector((store) => store.auth);
+  return auth;
+};
