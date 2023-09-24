@@ -79,6 +79,7 @@ export function AudioPlayer({ setTrackTime, trackTime }) {
       track_file: trackList[index].track_file,
       progress: 0,
       time: trackList[index].duration_in_seconds,
+      staredUser: trackList[index].stared_user,
     });
     dispatch(setCurrentTracks(trackList[index].id));
   };

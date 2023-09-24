@@ -2,8 +2,10 @@ import { TrackPage } from "../Track/Track";
 import { SceletonCard } from "../Track/sceleton";
 import { Filter } from "../Filter/filter";
 import * as S from "./trackList.style";
+import { useSelector } from "react-redux";
 
 export function TrackList({ isLoading, setCurrentTrack }) {
+  const tracks = useSelector((state) => state.track.newPlaylist);
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
@@ -29,7 +31,7 @@ export function TrackList({ isLoading, setCurrentTrack }) {
           {isLoading ? (
             <SceletonCard />
           ) : (
-            <TrackPage setCurrentTrack={setCurrentTrack} />
+            <TrackPage setCurrentTrack={setCurrentTrack} tracks={tracks} />
           )}
         </S.ContentPlaylist>
       </S.CenterblockContent>

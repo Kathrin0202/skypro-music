@@ -57,7 +57,9 @@ export async function registerUser({ email, password }) {
 }
 
 function saveToken(token) {
-  sessionStorage.setItem("tokenData", JSON.stringify(token));
+  const tokenObject = JSON.parse(token);
+  localStorage.setItem("access", JSON.stringify(tokenObject.access));
+  localStorage.setItem("refresh", JSON.stringify(tokenObject.refresh));
 }
 
 export async function getToken({ email, password }) {

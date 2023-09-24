@@ -1,4 +1,3 @@
-import { AudioPlayer } from "../AudioPlayer/audioPlayer";
 import { Nav } from "../NavMenu/navMenu";
 import { SideBar } from "../SideBar/sideBar";
 import { TrackList } from "../TrackList/trackList";
@@ -8,8 +7,6 @@ export const MainPage = ({
   isLoading,
   tracks,
   setCurrentTrack,
-  trackTime,
-  setTrackTime,
 }) => {
   return (
     <S.Main>
