@@ -7,7 +7,11 @@ export const MainPage = ({ isLoading, setCurrentTrack, tracks }) => {
   return (
     <S.Main>
       <Nav />
-      <TrackList isLoading={isLoading} setCurrentTrack={setCurrentTrack} />
+      <TrackList
+        isLoading={isLoading}
+        setCurrentTrack={setCurrentTrack}
+        tracks={tracks}
+      />
       <SideBar isLoading={isLoading} setCurrentTrack={setCurrentTrack} />
     </S.Main>
   );

@@ -114,7 +114,9 @@ export const favoriteTracksApi = createApi({
           method: "POST",
         };
       },
-      invalidatesTags: (track) => [{ type: TRACKS_TAG.type, id: track?.id }],
+      invalidatesTags: (trackId) => [
+        { type: TRACKS_TAG.type, id: trackId?.id },
+      ],
     }),
 
     dislikeTrack: builder.mutation({
@@ -125,7 +127,9 @@ export const favoriteTracksApi = createApi({
           method: "DELETE",
         };
       },
-      invalidatesTags: (track) => [{ type: TRACKS_TAG.type, id: track?.id }],
+      invalidatesTags: (trackId) => [
+        { type: TRACKS_TAG.type, id: trackId?.id },
+      ],
     }),
   }),
 });

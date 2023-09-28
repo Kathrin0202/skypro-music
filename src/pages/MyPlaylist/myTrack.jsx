@@ -3,7 +3,6 @@ import { TrackPage } from "../../components/Track/Track";
 import * as S from "../../components/TrackList/trackList.style";
 import { useGetAllMyTracksQuery } from "../../services/myTracks";
 import { useAuthSelector } from "../../store/slices/auth";
-import { MyTrackList } from "./myTrackList";
 
 export function MyTrack({ setCurrentTrack }) {
   const auth = useAuthSelector();
@@ -32,11 +31,14 @@ export function MyTrack({ setCurrentTrack }) {
           {isLoading ? (
             <SceletonCard />
           ) : (
-            <TrackPage
-              error={error}
-              tracks={data}
-              setCurrentTrack={setCurrentTrack}
-            />
+            data?.map((item) => (
+              <TrackPage
+                key={item.id}
+                error={error}
+                song={item}
+                setCurrentTrack={setCurrentTrack}
+              />
+            ))
           )}
         </S.ContentPlaylist>
       </S.CenterblockContent>

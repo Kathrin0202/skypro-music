@@ -4,6 +4,7 @@ import {
   useDislikeTrackMutation,
   useLikeTrackMutation,
 } from "../../services/myTracks";
+import { useAuthSelector } from "../../store/slices/auth";
 import { setCurrentTracks, setNewTracks } from "../../store/slices/playlist";
 import * as S from "./sceleton.style";
 function formatTime(number) {
@@ -12,7 +13,7 @@ function formatTime(number) {
   return time;
 }
 
-export const TrackPage = ({ setCurrentTrack, error, tracks }) => {
+export const TrackPage = ({ setCurrentTrack, error, song }) => {
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.track.trackId);
   const play = useSelector((state) => state.track.playTrack);
@@ -24,117 +25,99 @@ export const TrackPage = ({ setCurrentTrack, error, tracks }) => {
     id,
     stared_user
   ) => {
-    setCurrentTrack({
-      author: musicAuthor,
-      name: musicTitle,
-      track_file: track_file,
-      duration_in_seconds: time,
-      progress: 0,
-      id: id,
-      stared_user: stared_user,
-    });
-    dispatch(setCurrentTracks(id));
-    dispatch(setNewTracks(tracks));
+    dispatch(
+      setCurrentTracks({
+        author: musicAuthor,
+        name: musicTitle,
+        track_file: track_file,
+        duration_in_seconds: time,
+        progress: 0,
+        id: id,
+        stared_user: stared_user,
+      })
+    );
+    dispatch(setNewTracks(song));
   };
-  const authUser = JSON.parse(sessionStorage.getItem("user"));
-
   const [like, { likeError }] = useLikeTrackMutation();
   const [dislike, { dislikeError }] = useDislikeTrackMutation();
-
-  const userLike = (tracks?.stared_user ?? []).find(
-    ({ id }) => id === authUser.id
-  );
-  const [isLiked, setIsLiked] = useState(userLike);
-
+  const auth = useAuthSelector();
+  const authUser = Boolean(song.stared_user.find(({ id }) => id === auth.id));
+  const [isLiked, setIsLiked] = useState(authUser);
   useEffect(() => {
-    setIsLiked(userLike);
-  }, [userLike]);
-
+    setIsLiked(authUser);
+  }, [authUser]);
+  
   const handleLike = async (id) => {
     setIsLiked(true);
     await like({ id }).unwrap();
-    dispatch(setNewTracks(tracks));
   };
 
   const handleDislike = async (id) => {
     setIsLiked(false);
     await dislike({ id }).unwrap();
-    dispatch(setNewTracks(tracks));
   };
 
-  return { error } ? (
-    tracks &&
-      tracks.map((song) => {
-        return (
-          <S.PlaylistItem
-            key={song.id}
+  const toggleLikeDislike = (id) =>
+    isLiked ? handleDislike(id) : handleLike(id);
+
+  return (
+    <S.PlaylistItem
+      onClick={() => {
+        playTrack(
+          song.author,
+          song.name,
+          song.track_file,
+          song.duration_in_seconds,
+          song.id,
+          song.stared_user
+        );
+      }}
+    >
+      <S.PlaylistTrack>
+        <S.TrackTitle>
+          <S.TrackTitleImage>
+            {play && isPlaying?.id === song.id ? (
+              <S.TrackSvg alt="music"></S.TrackSvg>
+            ) : (
+              <S.TrackTitleSvg alt="music">
+                <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+              </S.TrackTitleSvg>
+            )}
+          </S.TrackTitleImage>
+          <S.TrackAuthor>
+            <S.TrackTitleLink>
+              {song.name} <S.TrackTitleSpan>{song.logo}</S.TrackTitleSpan>
+            </S.TrackTitleLink>
+          </S.TrackAuthor>
+        </S.TrackTitle>
+        <S.TrackAuthor>
+          <S.TrackAuthorLink>{song.author}</S.TrackAuthorLink>
+        </S.TrackAuthor>
+        <S.TrackAlbum>
+          <S.TrackAlbumLink href="http://">{song.album}</S.TrackAlbumLink>
+        </S.TrackAlbum>
+        <S.TrackTime>
+          <S.TrackTimeSvg
+            alt="like"
             onClick={() => {
-              playTrack(
-                song.author,
-                song.name,
-                song.track_file,
-                song.duration_in_seconds,
-                song.id
-              );
+              toggleLikeDislike(song.id);
             }}
           >
-            <S.PlaylistTrack>
-              <S.TrackTitle>
-                <S.TrackTitleImage>
-                  {play && isPlaying?.id === song.id ? (
-                    <S.TrackSvg alt="music"></S.TrackSvg>
-                  ) : (
-                    <S.TrackTitleSvg alt="music">
-                      <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-                    </S.TrackTitleSvg>
-                  )}
-                </S.TrackTitleImage>
-                <S.TrackAuthor>
-                  <S.TrackTitleLink>
-                    {song.name} <S.TrackTitleSpan>{song.logo}</S.TrackTitleSpan>
-                  </S.TrackTitleLink>
-                </S.TrackAuthor>
-              </S.TrackTitle>
-              <S.TrackAuthor>
-                <S.TrackAuthorLink>{song.author}</S.TrackAuthorLink>
-              </S.TrackAuthor>
-              <S.TrackAlbum>
-                <S.TrackAlbumLink href="http://">{song.album}</S.TrackAlbumLink>
-              </S.TrackAlbum>
-              <S.TrackTime>
-                {isLiked && isPlaying?.id === song.id ? (
-                  <S.TrackTimeSvg
-                    alt="like"
-                    onClick={() => handleDislike(song.id)}
-                  >
-                    <use
-                      xlinkHref="img/icon/sprite.svg#icon-like"
-                      fill="#696969"
-                    ></use>
-                  </S.TrackTimeSvg>
-                ) : (
-                  <S.TrackTimeSvg
-                    alt="like"
-                    onClick={() => handleLike(song.id)}
-                  >
-                    <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                  </S.TrackTimeSvg>
-                )}
-                <S.TrackTimeText>
-                  {formatTime(
-                    Math.floor((song.duration_in_seconds % 3600) / 60)
-                  )}
-                  :
-                  {formatTime(
-                    Math.floor((song.duration_in_seconds % 3600) % 60)
-                  )}
-                </S.TrackTimeText>
-              </S.TrackTime>
-            </S.PlaylistTrack>
-          </S.PlaylistItem>
-        );
-      })
-  ) : (
-    <h2>В этом плейлисте нет треков</h2>
+            {isLiked ? (
+              <use
+                xlinkHref="img/icon/sprite.svg#icon-like"
+                fill="#B672FF"
+              ></use>
+            ) : (
+              <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+            )}
+          </S.TrackTimeSvg>
+          <S.TrackTimeText>
+            {formatTime(Math.floor((song.duration_in_seconds % 3600) / 60))}:
+            {formatTime(Math.floor((song.duration_in_seconds % 3600) % 60))}
+          </S.TrackTimeText>
+        </S.TrackTime>
+      </S.PlaylistTrack>
+    </S.PlaylistItem>
   );
 };

@@ -7,7 +7,7 @@ import { TrackPage } from "../../components/Track/Track";
 export const Item = (setCurrentTrack) => {
   const params = useParams();
   const { data, error, isLoading } = useGetCategoryQuery({ id: params.id });
-  const tracks = data?.item || [];
+  const track = data?.items || [];
   const name = data?.name || "";
   return (
     <S.MainCenterblock>
@@ -33,11 +33,14 @@ export const Item = (setCurrentTrack) => {
           {isLoading ? (
             <SceletonCard />
           ) : (
-            <TrackPage
-              error={error}
-              tracks={tracks}
-              setCurrentTrack={setCurrentTrack}
-            />
+            track.map((song) => (
+              <TrackPage
+                key={song.id}
+                error={error}
+                song={song}
+                setCurrentTrack={setCurrentTrack}
+              />
+            ))
           )}
         </S.ContentPlaylist>
       </S.CenterblockContent>

@@ -3,9 +3,11 @@ import { SceletonCard } from "../Track/sceleton";
 import { Filter } from "../Filter/filter";
 import * as S from "./trackList.style";
 import { useSelector } from "react-redux";
+import { useAuthSelector } from "../../store/slices/auth";
+import { useState } from "react";
 
-export function TrackList({ isLoading, setCurrentTrack }) {
-  const tracks = useSelector((state) => state.track.newPlaylist);
+export function TrackList({ isLoading, setCurrentTrack, tracks }) {
+
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
@@ -31,7 +33,13 @@ export function TrackList({ isLoading, setCurrentTrack }) {
           {isLoading ? (
             <SceletonCard />
           ) : (
-            <TrackPage setCurrentTrack={setCurrentTrack} tracks={tracks} />
+            tracks.map((song) => (
+              <TrackPage
+                key={song.id}
+                setCurrentTrack={setCurrentTrack}
+                song={song}
+              />
+            ))
           )}
         </S.ContentPlaylist>
       </S.CenterblockContent>
