@@ -7,6 +7,7 @@ import {
 import { useAuthSelector } from "../../store/slices/auth";
 import { setCurrentTracks, setNewTracks } from "../../store/slices/playlist";
 import * as S from "./sceleton.style";
+
 function formatTime(number) {
   let time = String(number);
   if (time.length < 2) return `0${time}`;
@@ -40,21 +41,34 @@ export const TrackPage = ({ setCurrentTrack, error, song }) => {
   };
   const [like, { likeError }] = useLikeTrackMutation();
   const [dislike, { dislikeError }] = useDislikeTrackMutation();
-  const auth = useAuthSelector();
+  const auth = JSON.parse(localStorage.getItem("user"));
   const authUser = Boolean(song.stared_user.find(({ id }) => id === auth.id));
   const [isLiked, setIsLiked] = useState(authUser);
+  
   useEffect(() => {
     setIsLiked(authUser);
   }, [authUser]);
-  
+
   const handleLike = async (id) => {
     setIsLiked(true);
     await like({ id }).unwrap();
+    dispatch(
+      setCurrentTracks({
+        id: id,
+      })
+    );
+    dispatch(setNewTracks(song));
   };
 
   const handleDislike = async (id) => {
     setIsLiked(false);
     await dislike({ id }).unwrap();
+    dispatch(
+      setCurrentTracks({
+        id: id,
+      })
+    );
+    dispatch(setNewTracks(song));
   };
 
   const toggleLikeDislike = (id) =>

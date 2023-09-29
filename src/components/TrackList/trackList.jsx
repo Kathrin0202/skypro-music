@@ -2,20 +2,12 @@ import { TrackPage } from "../Track/Track";
 import { SceletonCard } from "../Track/sceleton";
 import { Filter } from "../Filter/filter";
 import * as S from "./trackList.style";
-import { useSelector } from "react-redux";
-import { useAuthSelector } from "../../store/slices/auth";
-import { useState } from "react";
+import { Search } from "../Search/search";
 
 export function TrackList({ isLoading, setCurrentTrack, tracks }) {
-
   return (
     <S.MainCenterblock>
-      <S.CenterblockSearch>
-        <S.SearchSvg>
-          <use xlinkHref="img/icon/sprite.svg#icon-search"></use>
-        </S.SearchSvg>
-        <S.SearchText type="search" placeholder="Поиск" name="search" />
-      </S.CenterblockSearch>
+      <Search />
       <S.CenterblockH2>Треки</S.CenterblockH2>
       <Filter />
       <S.CenterblockContent>
