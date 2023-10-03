@@ -4,11 +4,11 @@ import {
   useDislikeTrackMutation,
   useLikeTrackMutation,
 } from "../../services/myTracks";
-import { useAuthSelector } from "../../store/slices/auth";
 import {
   setShuffleTracks,
   setPlayTracks,
   setCurrentTracks,
+  setNewTracks,
 } from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
@@ -54,53 +54,52 @@ export function AudioPlayer() {
       audioRef.current.currentTime = 0;
       return;
     }
-    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
-    let index = Object.keys(trackList).find(
-      (key) => trackList[key].id === currentTrack.id
-    );
+    const trackList = shuffle ? isShuffle : playlist;
+    let index = trackList?.findIndex((item) => item.id === currentTrack.id);
     if (+index === 0) return;
     index = +index - 1;
-    setCurrentTracks({
-      id: trackList[index].id,
-      author: trackList[index].author,
-      title: trackList[index].name,
-      track_file: trackList[index].track_file,
-      progress: 0,
-      time: trackList[index].duration_in_seconds,
-      staredUser: trackList[index].stared_user,
-    });
-    dispatch(setCurrentTracks(trackList[index].id));
+    dispatch(
+      setCurrentTracks({
+        id: trackList[index].id,
+        author: trackList[index].author,
+        title: trackList[index].name,
+        track_file: trackList[index].track_file,
+        progress: 0,
+        time: trackList[index].duration_in_seconds,
+        stared_user: trackList[index].stared_user,
+      })
+    );
   };
 
   const handleNext = () => {
-    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
-    let index = Object.keys(trackList).find(
-      (key) => trackList[key].id === currentTrack.id
-    );
-    if (+index === Object.keys(trackList).length - 1) return;
+    const trackList = shuffle ? [...isShuffle] : [...playlist];
+    let index = trackList?.findIndex((item) => item.id === currentTrack.id);
+    if (+index === trackList.length - 1) return;
     index = +index + 1;
-    setCurrentTracks({
-      id: trackList[index].id,
-      author: trackList[index].author,
-      title: trackList[index].name,
-      track_file: trackList[index].track_file,
-      progress: 0,
-      time: trackList[index].duration_in_seconds,
-      staredUser: trackList[index].stared_user,
-    });
-    dispatch(setCurrentTracks(trackList[index].id));
+    dispatch(
+      setCurrentTracks({
+        id: trackList[index].id,
+        author: trackList[index].author,
+        title: trackList[index].name,
+        track_file: trackList[index].track_file,
+        progress: 0,
+        time: trackList[index].duration_in_seconds,
+        stared_user: trackList[index].stared_user,
+      })
+    );
   };
 
   const handleShuffle = () => {
     if (shuffle) {
       setShuffle(false);
-      dispatch(setShuffleTracks({}));
+      dispatch(setShuffleTracks([]));
     } else {
-      const shuffleTracks = Object.values(playlist).sort(function () {
+      const shuffleTracks = [...playlist].sort(function () {
         return Math.round(Math.random()) - 0.5;
       });
+      console.log(shuffleTracks);
       setShuffle(true);
-      dispatch(setShuffleTracks({ ...shuffleTracks }));
+      dispatch(setShuffleTracks([...shuffleTracks]));
     }
   };
 
@@ -120,23 +119,29 @@ export function AudioPlayer() {
       dispatch(setPlayTracks(!isPlayingTracks));
     }
   };
-  let auth = useAuthSelector();
+  let auth = JSON.parse(localStorage.getItem("user"));
   const [like, { likeError }] = useLikeTrackMutation();
   const [dislike, { dislikeError }] = useDislikeTrackMutation();
-  const isLike = (currentTrack?.stared_user ?? []).find(
-    ({ id }) => id === auth.id
-  );
+  const [isLike, setIsLike] = useState(auth);
 
-  const handleLike = () => {
-    like({
+  useEffect(() => {
+    setIsLike(auth);
+  }, [currentTrack]);
+
+  const handleLike = async () => {
+    setIsLike(true);
+    await like({
       id: currentTrack.id,
-    });
+    }).unwrap();
+    dispatch(setCurrentTracks(currentTrack));
   };
 
-  const handleDislike = () => {
-    dislike({
+  const handleDislike = async () => {
+    setIsLike(false);
+    await dislike({
       id: currentTrack.id,
-    });
+    }).unwrap();
+    dispatch(setCurrentTracks(currentTrack));
   };
 
   return (
@@ -234,9 +239,12 @@ export function AudioPlayer() {
                     </S.TrackPlayContain>
 
                     <S.TrackPlayLike>
-                      {!isLike ? (
+                      {isLike ? (
                         <S.TrackPlayLikeBtn>
-                          <S.TrackPlayLikeSvg alt="like" onClick={handleLike}>
+                          <S.TrackPlayLikeSvg
+                            alt="like"
+                            onClick={() => handleLike(currentTrack.id)}
+                          >
                             <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
                           </S.TrackPlayLikeSvg>
                         </S.TrackPlayLikeBtn>
@@ -244,7 +252,7 @@ export function AudioPlayer() {
                         <S.TrackPlayDislike>
                           <S.TrackPlayDislikeSvg
                             alt="dislike"
-                            onClick={handleDislike}
+                            onClick={() => handleDislike(currentTrack.id)}
                           >
                             <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
                           </S.TrackPlayDislikeSvg>

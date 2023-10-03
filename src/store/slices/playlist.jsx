@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   playTrack: false,
-  newPlaylist: {},
+  newPlaylist: [],
   trackId: null,
   shufflePlaylist: [],
 };
@@ -21,11 +21,7 @@ export const tracksSlices = createSlice({
       state.trackId = action.payload;
     },
     setShuffleTracks: (state, action) => {
-      const id = action.payload;
-      const shuffleTrack = Object.values(state.newPlaylist).find(
-        (item) => item.id === id
-      );
-      state.shufflePlaylist = { ...shuffleTrack };
+      state.shufflePlaylist = action.payload;
     },
   },
 });
