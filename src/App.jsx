@@ -41,7 +41,7 @@ function App() {
             setUser={setUser}
             currentTrack={currentTrack}
           />
-          <AudioPlayer />
+          <AudioPlayer tracks={tracks}/>
           <footer></footer>
         </UserContext.Provider>
       </S.Container>

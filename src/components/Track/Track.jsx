@@ -4,7 +4,6 @@ import {
   useDislikeTrackMutation,
   useLikeTrackMutation,
 } from "../../services/myTracks";
-import { useAuthSelector } from "../../store/slices/auth";
 import { setCurrentTracks, setNewTracks } from "../../store/slices/playlist";
 import * as S from "./sceleton.style";
 
