@@ -13,7 +13,7 @@ import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
-export function AudioPlayer() {
+export function AudioPlayer({tracks}) {
   const [trackTime, setTrackTime] = useState({});
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
@@ -47,11 +47,9 @@ export function AudioPlayer() {
 
     return `${minutes}:${seconds}`;
   }
-  const trackList = shuffle ? isShuffle : playlist;
-
+  const trackList = shuffle ? isShuffle : tracks;
   const handleNext = () => {
-  
-    let index = trackList.findIndex(item => item.id === currentTrack.id);
+    let index = trackList.findIndex((item) => item?.id === currentTrack.id);
     if (+index === trackList.length - 1) return;
     index = +index + 1;
 
@@ -69,6 +67,7 @@ export function AudioPlayer() {
   };
 
   const handlePrev = () => {
+    const trackList = shuffle ? isShuffle : tracks;
     if (audioRef.current?.currentTime > 5) {
       audioRef.current.currentTime = 0;
       return;
