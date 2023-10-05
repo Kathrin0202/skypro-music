@@ -87,6 +87,7 @@ export const CenterblockContent = styled.div`
   -ms-flex-direction: column;
   flex-direction: column;
   position: relative;
+  overflow-y: auto;
 `;
 export const ContentTitle = styled.div`
   display: -webkit-box;

@@ -21,7 +21,11 @@ export const tracksSlices = createSlice({
       state.trackId = action.payload;
     },
     setShuffleTracks: (state, action) => {
-      state.shufflePlaylist = action.payload;
+      const id = action.payload;
+      const shuffleTrack = Object.values(state.newPlaylist).find(
+        (item) => item.id === id
+      );
+      state.shufflePlaylist = { ...shuffleTrack };
     },
   },
 });

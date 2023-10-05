@@ -13,7 +13,7 @@ function formatTime(number) {
   return time;
 }
 
-export const TrackPage = ({ setCurrentTrack, error, song }) => {
+export const TrackPage = ({ song }) => {
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.track.trackId);
   const play = useSelector((state) => state.track.playTrack);
@@ -38,8 +38,8 @@ export const TrackPage = ({ setCurrentTrack, error, song }) => {
     );
     dispatch(setNewTracks(song));
   };
-  const [like, { likeError }] = useLikeTrackMutation();
-  const [dislike, { dislikeError }] = useDislikeTrackMutation();
+  const [like] = useLikeTrackMutation();
+  const [dislike] = useDislikeTrackMutation();
   const auth = JSON.parse(localStorage.getItem("user"));
   const authUser = Boolean(song.stared_user.find(({ id }) => id === auth.id));
   const [isLiked, setIsLiked] = useState(authUser);

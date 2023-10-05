@@ -58,7 +58,7 @@ export function AudioPlayer({tracks}) {
         id: trackList[index].id,
         author: trackList[index].author,
         name: trackList[index].name,
-        trackFile: trackList[index].track_file,
+        track_file: trackList[index].track_file,
         progress: 0,
         length: trackList[index].duration_in_seconds,
         staredUser: trackList[index].stared_user,
@@ -81,12 +81,13 @@ export function AudioPlayer({tracks}) {
         id: trackList[index].id,
         author: trackList[index].author,
         title: trackList[index].name,
-        trackFile: trackList[index].track_file,
+        track_file: trackList[index].track_file,
         progress: 0,
         length: trackList[index].duration_in_seconds,
         staredUser: trackList[index].stared_user,
       })
     );
+    dispatch(setPlayTracks(true))
   };
 
   const handleShuffle = () => {
@@ -94,11 +95,11 @@ export function AudioPlayer({tracks}) {
       setShuffle(false);
       dispatch(setShuffleTracks([]));
     } else {
-      const shuffleTracks = [...playlist].sort(function () {
+      const shuffleTracks = Object.values(playlist).sort(function () {
         return Math.round(Math.random()) - 0.5;
       });
       setShuffle(true);
-      dispatch(setShuffleTracks([...shuffleTracks]));
+      dispatch(setShuffleTracks({ ...shuffleTracks }));
     }
   };
 

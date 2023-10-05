@@ -2,7 +2,7 @@ import styled, { createGlobalStyle } from "styled-components";
 export const Wrapper = styled.div`
   width: 100%;
   min-height: 100%;
-  overflow: hidden;
+  overflow: auto;
   background-color: #383838;
 `;
 export const Container = styled.div`
