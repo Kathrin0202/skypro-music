@@ -1,20 +1,16 @@
 import { Routes, Route } from "react-router-dom";
 import { MainPage } from "./components/Main/main";
 import { ProtectedRoute } from "./components/protector-route";
-import { Item } from "./pages/item";
 import { MyPlaylist } from "./pages/MyPlaylist/myPlaylist";
 import { NotFound } from "./pages/notFound";
 import { Login } from "./pages/login";
 import { Registration } from "./pages/registration";
+import { Category } from "./pages/Category/category";
 export const AppRoutes = ({
   isLoading,
-  tracks,
-  isOpen,
-  setIsOpen,
   currentTrack,
   setCurrentTrack,
-  trackTime,
-  setTrackTime,
+  tracks,
 }) => {
   return (
     <Routes>
@@ -30,18 +26,26 @@ export const AppRoutes = ({
           element={
             <MainPage
               isLoading={isLoading}
-              tracks={tracks}
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              currentTrack={currentTrack}
               setCurrentTrack={setCurrentTrack}
-              trackTime={trackTime}
-              setTrackTime={setTrackTime}
+              tracks={tracks}
             />
           }
         />
-        <Route path="/myplaylist" element={<MyPlaylist />} />
-        <Route path="/item/:id" element={<Item />} />
+        <Route
+          path="/myplaylist"
+          element={<MyPlaylist setCurrentTrack={setCurrentTrack} />}
+        />
+        <Route
+          path="/item/:id"
+          element={
+            <Category
+              isLoading={isLoading}
+              currentTrack={currentTrack}
+              setCurrentTrack={setCurrentTrack}
+              tracks={tracks}
+            />
+          }
+        />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

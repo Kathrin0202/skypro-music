@@ -20,34 +20,13 @@ export const TextWrap = styled.li`
     text-decoration-line: underline;
   }
 `;
-export const CenterblockFilter = styled.div`
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  margin-bottom: 51px;
-  gap: 10px;
-`;
-export const FilterTitle = styled.div`
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  margin-right: 15px;
-`;
 const activeMixin = css`
   border-color: #ad61ff;
   color: #ad61ff;
   cursor: pointer;
 `;
 
-export const FilterButton = styled.ul`
+export const FilterButton = styled.div`
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -65,7 +44,7 @@ export const FilterButton = styled.ul`
   }
   ${(props) => (props.$active === "active" ? activeMixin : "")}
 `;
-export const FilterWrap = styled.div`
+export const FilterWrap = styled.ul`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -118,4 +97,23 @@ export const FilterRadioButton = styled.input`
   &:checked + label:before {
     background: rgba(255, 255, 255, 1);
   }
+`;
+export const Text = styled.strong`
+  color: #b672ff;
+`;
+export const Circle = styled.div`
+  color: white;
+  background-color: #ad61ff;
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: StratosSkyeng;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 13px; /* 100% */
+  position: absolute;
 `;

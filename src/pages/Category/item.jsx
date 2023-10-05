@@ -1,12 +1,14 @@
+import { useParams } from "react-router-dom";
+import { useGetCategoryQuery } from "../../services/myTracks";
+import * as S from "../../components/TrackList/trackList.style";
 import { SceletonCard } from "../../components/Track/sceleton";
 import { TrackPage } from "../../components/Track/Track";
-import * as S from "../../components/TrackList/trackList.style";
-import { useGetAllMyTracksQuery } from "../../services/myTracks";
-import { useAuthSelector } from "../../store/slices/auth";
 
-export function MyTrack({ setCurrentTrack }) {
-  const auth = useAuthSelector();
-  const { data = [], isLoading, error } = useGetAllMyTracksQuery({ auth });
+export const Item = (setCurrentTrack) => {
+  const params = useParams();
+  const { data, error, isLoading } = useGetCategoryQuery({ id: params.id });
+  const track = data?.items || [];
+  const name = data?.name || "";
   return (
     <S.MainCenterblock>
       <S.CenterblockSearch>
@@ -15,7 +17,7 @@ export function MyTrack({ setCurrentTrack }) {
         </S.SearchSvg>
         <S.SearchText type="search" placeholder="Поиск" name="search" />
       </S.CenterblockSearch>
-      <S.CenterblockH2>Мои треки</S.CenterblockH2>
+      <S.CenterblockH2>{name}</S.CenterblockH2>
       <S.CenterblockContent>
         <S.ContentTitle>
           <S.PlaylistTitleCol1>Трек</S.PlaylistTitleCol1>
@@ -31,11 +33,11 @@ export function MyTrack({ setCurrentTrack }) {
           {isLoading ? (
             <SceletonCard />
           ) : (
-            data?.map((item) => (
+            track.map((song) => (
               <TrackPage
-                key={item.id}
+                key={song.id}
                 error={error}
-                song={item}
+                song={song}
                 setCurrentTrack={setCurrentTrack}
               />
             ))
@@ -44,4 +46,4 @@ export function MyTrack({ setCurrentTrack }) {
       </S.CenterblockContent>
     </S.MainCenterblock>
   );
-}
+};

@@ -18,19 +18,10 @@ export const tracksSlices = createSlice({
       state.playTrack = action.payload;
     },
     setCurrentTracks: (state, action) => {
-      const id = action.payload;
-      const toggledTrack = Object.values(state.newPlaylist).find(
-        (item) => item.id === id
-      );
-      state.playTrack = true;
-      state.trackId = { ...toggledTrack };
+      state.trackId = action.payload;
     },
     setShuffleTracks: (state, action) => {
-      const id = action.payload;
-      const shuffleTrack = Object.values(state.newPlaylist).find(
-        (item) => item.id === id
-      );
-      state.shufflePlaylist = { ...shuffleTrack };
+      state.shufflePlaylist = action.payload;
     },
   },
 });
