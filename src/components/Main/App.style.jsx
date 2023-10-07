@@ -2,7 +2,7 @@ import styled, { createGlobalStyle } from "styled-components";
 export const Wrapper = styled.div`
   width: 100%;
   min-height: 100%;
-  overflow: auto;
+  overflow: hidden;
   background-color: #383838;
 `;
 export const Container = styled.div`
@@ -11,6 +11,7 @@ export const Container = styled.div`
   margin: 0 auto;
   position: relative;
   background-color: #181818;
+  overflow-y: auto;
 `;
 export const Main = styled.main`
   -webkit-box-flex: 1;
