@@ -1,22 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  useDislikeTrackMutation,
+  useLikeTrackMutation,
+} from "../../services/myTracks";
+import {
   setShuffleTracks,
   setPlayTracks,
   setCurrentTracks,
-  setNewTracks,
 } from "../../store/slices/playlist";
 import * as S from "./audioPlayer.style";
 import { PlayerProgress } from "./playerProgress";
 import { Volume } from "./playerVolume";
 
-export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
+export function AudioPlayer({ tracks }) {
+  const [trackTime, setTrackTime] = useState({});
   const audioRef = useRef(null);
   const [isRepeat, setIsRepeat] = useState(false);
   const [shuffle, setShuffle] = useState(false);
 
   const dispatch = useDispatch();
-  const playlist = useSelector((state) => state.track.newPlaylist);
   const currentTrack = useSelector((state) => state.track.trackId);
   const isShuffle = useSelector((state) => state.track.shufflePlaylist);
   const isPlayingTracks = useSelector((state) => state.track.playTrack);
@@ -43,59 +46,60 @@ export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
 
     return `${minutes}:${seconds}`;
   }
+  const trackList = shuffle ? isShuffle : tracks;
+  const handleNext = () => {
+    console.log(isShuffle);
+    let index = trackList.findIndex((item) => item?.id === currentTrack.id);
+    if (+index === trackList.length - 1) return;
+    index = +index + 1;
+
+    dispatch(
+      setCurrentTracks({
+        id: trackList[index].id,
+        author: trackList[index].author,
+        name: trackList[index].name,
+        track_file: trackList[index].track_file,
+        progress: 0,
+        length: trackList[index].duration_in_seconds,
+        staredUser: trackList[index].stared_user,
+      })
+    );
+  };
 
   const handlePrev = () => {
+    const trackList = shuffle ? [isShuffle] : tracks;
     if (audioRef.current?.currentTime > 5) {
       audioRef.current.currentTime = 0;
       return;
     }
-    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
-    let index = Object.keys(trackList).find(
-      (key) => trackList[key].id === currentTrack.id
-    );
+    let index = trackList.findIndex((item) => item.id === currentTrack.id);
     if (+index === 0) return;
     index = +index - 1;
-    setCurrentTracks({
-      id: trackList[index].id,
-      author: trackList[index].author,
-      title: trackList[index].name,
-      track_file: trackList[index].track_file,
-      progress: 0,
-      time: trackList[index].duration_in_seconds,
-    });
-    dispatch(setCurrentTracks(trackList[index].id));
-    console.log(trackList[index]);
-  };
 
-  const handleNext = () => {
-    const trackList = shuffle ? { ...isShuffle } : { ...playlist };
-    let index = Object.keys(trackList).find(
-      (key) => trackList[key].id === currentTrack.id
+    dispatch(
+      setCurrentTracks({
+        id: trackList[index].id,
+        author: trackList[index].author,
+        title: trackList[index].name,
+        track_file: trackList[index].track_file,
+        progress: 0,
+        length: trackList[index].duration_in_seconds,
+        staredUser: trackList[index].stared_user,
+      })
     );
-    if (+index === Object.keys(trackList).length - 1) return;
-    index = +index + 1;
-    setCurrentTracks({
-      id: trackList[index].id,
-      author: trackList[index].author,
-      title: trackList[index].name,
-      track_file: trackList[index].track_file,
-      progress: 0,
-      time: trackList[index].duration_in_seconds,
-    });
-    dispatch(setCurrentTracks(trackList[index].id));
-    console.log(trackList[index]);
   };
 
   const handleShuffle = () => {
     if (shuffle) {
       setShuffle(false);
-      dispatch(setShuffleTracks({}));
+      dispatch(setShuffleTracks([]));
     } else {
-      const shuffleTracks = Object.values(playlist).sort(function () {
+      const shuffleTracks = [...tracks].sort(function () {
         return Math.round(Math.random()) - 0.5;
       });
+      console.log(shuffleTracks);
       setShuffle(true);
-      dispatch(setShuffleTracks({ ...shuffleTracks }));
+      dispatch(setShuffleTracks(shuffleTracks));
     }
   };
 
@@ -112,27 +116,51 @@ export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
     });
     if (duration === currentTimes) {
       handleNext();
-      dispatch(setPlayTracks(isPlayingTracks));
+      dispatch(setPlayTracks(!isPlayingTracks));
     }
+  };
+  let auth = JSON.parse(localStorage.getItem("user"));
+  const [like] = useLikeTrackMutation();
+  const [dislike] = useDislikeTrackMutation();
+  const [isLike, setIsLike] = useState(auth);
+
+  useEffect(() => {
+    setIsLike(auth);
+  }, [currentTrack]);
+
+  const handleLike = async () => {
+    setIsLike(true);
+    await like({
+      id: currentTrack.id,
+    }).unwrap();
+    dispatch(setCurrentTracks(currentTrack));
+  };
+
+  const handleDislike = async () => {
+    setIsLike(false);
+    await dislike({
+      id: currentTrack.id,
+    }).unwrap();
+    dispatch(setCurrentTracks(currentTrack));
   };
 
   return (
     <>
       {currentTrack ? (
         <>
+          <audio
+            src={currentTrack.track_file}
+            controls
+            style={{ visibility: "hidden" }}
+            loop={isRepeat}
+            ref={audioRef}
+            onPlay={() => setPlayTracks(true)}
+            onPause={() => setPlayTracks(false)}
+            onTimeUpdate={handleProgress}
+            volume="true"
+          ></audio>
           <S.Bar>
             <S.BarContent>
-              <audio
-                src={currentTrack.track_file}
-                controls
-                style={{ visibility: "hidden" }}
-                loop={isRepeat}
-                ref={audioRef}
-                onPlay={() => setPlayTracks(true)}
-                onPause={() => setPlayTracks(false)}
-                onTimeUpdate={handleProgress}
-                volume="true"
-              ></audio>
               <S.BarPlayerProgressTime>
                 {formatTime(audioRef.current?.currentTime || 0)}/
                 {formatTime(audioRef.current?.duration || 0)}
@@ -211,16 +239,25 @@ export function AudioPlayer({ setTrackTime, trackTime, setCurrentTrack }) {
                     </S.TrackPlayContain>
 
                     <S.TrackPlayLike>
-                      <S.TrackPlayLikeBtn>
-                        <S.TrackPlayLikeSvg alt="like">
-                          <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                        </S.TrackPlayLikeSvg>
-                      </S.TrackPlayLikeBtn>
-                      <S.TrackPlayDislike>
-                        <S.TrackPlayDislikeSvg alt="dislike">
-                          <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
-                        </S.TrackPlayDislikeSvg>
-                      </S.TrackPlayDislike>
+                      {isLike ? (
+                        <S.TrackPlayLikeBtn>
+                          <S.TrackPlayLikeSvg
+                            alt="like"
+                            onClick={() => handleLike(currentTrack.id)}
+                          >
+                            <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+                          </S.TrackPlayLikeSvg>
+                        </S.TrackPlayLikeBtn>
+                      ) : (
+                        <S.TrackPlayDislike>
+                          <S.TrackPlayDislikeSvg
+                            alt="dislike"
+                            onClick={() => handleDislike(currentTrack.id)}
+                          >
+                            <use xlinkHref="img/icon/sprite.svg#icon-dislike"></use>
+                          </S.TrackPlayDislikeSvg>
+                        </S.TrackPlayDislike>
+                      )}
                     </S.TrackPlayLike>
                   </S.PlayerTrackPlay>
                 </S.BarPlayer>
